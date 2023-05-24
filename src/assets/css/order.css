@@ -1,9 +1,9 @@
 
 .el-row{
-    margin-top :20px;
+    margin-top :10px;
 }
 .el-row .nomargin{
-    margin-top:10px;
+    margin-top:5px;
 }
 .el-radio-group {
     margin-left:60px;
@@ -12,4 +12,14 @@
     margin-top :-10px;
     font-size : 30px;
     color :orange;
+}
+
+.main-button{
+    margin-top : -5px;
+    width:200px;
+}
+.title {
+    font-size:25px;
+    font-weight: bolder;
+    text-align: center;
 }

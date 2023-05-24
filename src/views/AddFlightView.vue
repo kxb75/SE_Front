@@ -1,5 +1,5 @@
 <template>
-    <div class="about" v-if="this.$store.state.identity == 2">
+    <div class="addFlight" v-if="this.$store.state.identity == 2">
         <el-row :gutter="0">
             <el-col :span="2" :offset="7">
                 <el-button 
@@ -26,7 +26,7 @@
                 <el-col :span="1" :offset="1">
                     <el-image class="icon"
                     :src="require('../img/icon.png')"
-                    :fit="fit"></el-image>
+                    fit="fit"></el-image>
                 </el-col>
                 <el-col :span="4">
                 <el-form-item label="到达机场">
@@ -135,7 +135,8 @@
             </el-row>
     </div>
     <div v-else>
-        <p class="title">permission denied</p>
+        <el-result icon="error" title="permission denied" subTitle="您没有权限访问此页面">
+        </el-result>
     </div>
 </template>
 

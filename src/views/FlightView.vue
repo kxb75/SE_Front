@@ -1,10 +1,10 @@
 <template>
     <div class="flight">
         <p class="title"> 航班查询 </p>
-        <el-form ref="form" :model="form" label-width="80px">
+        <el-form :rules="rules" ref="form" :model="form" label-width="80px">
             <el-row :gutter="0">
                 <el-col :span="3" :offset="7">
-                <el-form-item label="起飞城市">
+                <el-form-item label="起飞城市" prop="departureCity">
                     <el-cascader
                     v-model="form.departureCity"
                     placeholder="北京"
@@ -15,10 +15,10 @@
                 <el-col :span="1" :offset="1">
                     <el-image class="icon"
                     :src="require('../img/icon.png')"
-                    :fit="fit"></el-image>
+                    fit="fit"></el-image>
                 </el-col>
                 <el-col :span="3">
-                <el-form-item label="到达城市">
+                <el-form-item label="到达城市" prop="arrivalCity">
                     <el-cascader
                     v-model="form.arrivalCity"
                     placeholder="上海"
@@ -29,7 +29,7 @@
             </el-row>
             <el-row :gutter="0">
                 <el-col :span="5" :offset="7">
-                <el-form-item label="起飞时间">
+                <el-form-item label="起飞时间" prop="date">
                     <el-date-picker
                     v-model="form.date"
                     :picker-options="pickerOptions"
@@ -50,7 +50,7 @@
             </el-row>
             </el-form>
             <el-row :gutter="0">
-            <el-col :span="7" :offset="10"><el-button class="main-button" type="primary" plain>查询</el-button></el-col>
+            <el-col :span="7" :offset="10"><el-button class="main-button" type="primary" plain @click="submitForm('form')">查询</el-button></el-col>
             <el-col :span="6"><div id="manager" v-if="this.$store.state.identity == 2">
                 <el-button v-on:click="toAddFlight" type="info">添加航班</el-button>
                 <el-button type="info">导出航班</el-button>
@@ -135,12 +135,19 @@
 <script>
     export default {
         data() {
+            const validate1 = (rule, value, callback) => {
+                if (value[0] == this.form.departureCity[0]) {
+                    callback(new Error('请选择与出发城市不同的城市'))
+                } else {
+                    callback()
+                }
+            }
             return {
                 form: {
-                date  : '',
-                price : 500,
-                departureCity : '',
-                arrivalCity : '',
+                    date  : '',
+                    price : 500,
+                    departureCity : '',
+                    arrivalCity : '',
                 },
                 pickerOptions: {
                     disabledDate(time) {
@@ -180,15 +187,35 @@
                         value : 'Shenzhen',
                         label : '深圳',
                     }]
-                }]
+                }],
+                rules: {
+                    departureCity: [
+                        { required: true, message: '请选择出发城市', trigger: 'change' }
+                    ],
+                    arrivalCity: [
+                        { required: true, message: '请选择到达城市', trigger: 'change' },
+                        { validator: validate1, trigger: 'blur'}
+                    ],
+                    date: [
+                        { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+                    ],
+                }   
             }
         },
         methods : {
             toAddFlight() {
                 this.$router.push({path : "/addFlight"});
             },
-            notFound() {
-                alert(':D');
+            submitForm(formName) {
+                console.log(this.$refs[formName])
+                this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    alert('submit!');
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+                });
             },
             handleMessage (row) {
                 this.$store.commit('updateCurrentFlight',row)

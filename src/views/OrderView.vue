@@ -7,6 +7,9 @@
                 icon="el-icon-arrow-left"
                 @click="toBack">返回</el-button>
             </el-col>
+            <el-col :span="2" :offset="7">
+            <p class="title nomargin">订单</p>
+            </el-col>
         </el-row>
         <el-row :gutter="0">
             <el-col :span="8" :offset="4">
@@ -31,16 +34,16 @@
         <el-divider></el-divider>
         <el-row :gutter="20">
             <el-col :span="1">.</el-col>
-            <el-col v-for="ruleForm in passengerList" :key="passengerList.index" :span="7">
+            <el-col v-for="passenger in passengerList" :key="passenger.index" :span="7">
             <el-card>
-                <el-form :key="ruleForm" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
+                <el-form :model="passenger" :rules="rules" :ref="passenger.index" label-width="100px">
                     <el-form-item label="身份证号" prop="id">
-                        <el-input v-model="ruleForm.id"></el-input>
+                        <el-input v-model="passenger.id"></el-input>
                     </el-form-item>
                     <el-form-item label="姓名" prop="name">
-                        <el-input v-model="ruleForm.name"></el-input>
+                        <el-input v-model="passenger.name"></el-input>
                     </el-form-item>
-                    <el-radio-group v-model="ruleForm.level">
+                    <el-radio-group v-model="passenger.level">
                         <el-radio-button label="first">
                             <el-row class="nomargin">头等舱</el-row>
                             <el-row class="nomargin">{{currentFlight.price1}}</el-row>
@@ -60,7 +63,7 @@
                                 {{currentFlight.insurance.label}} （{{currentFlight.insurance.price}}￥） 
                             </el-col>
                             <el-col :span="12">
-                                <el-switch v-model="ruleForm.insurance"></el-switch>
+                                <el-switch v-model="passenger.insurance"></el-switch>
                             </el-col>
                         </el-row>
                     </el-form-item>
@@ -76,15 +79,16 @@
             </el-row>
             </el-col>
         </el-row>
+        <el-divider></el-divider>
         <el-row>
-            <el-col :span="1" :offset="6">
+            <el-col :span="1" :offset="16">
                 总计：
             </el-col>
-            <el-col class="price" :span="4">
+            <el-col class="price" :span="2">
                 {{getTotalPrice}}￥
             </el-col>
-            <el-col :span="6">
-                <el-button type="primary">去支付</el-button>
+            <el-col :span="5">
+                <el-button type="primary" class="main-button" @click="submit()">去支付</el-button>
             </el-col>
         </el-row>
     </div>
@@ -101,18 +105,24 @@
                     name: '',
                     level: 'third',
                     insurance :false}],
+                rules: {
+                    name: [
+                        { required: true, message: '请输入姓名', trigger: 'change' },
+                    ],
+                    id: [
+                        { required: true, message: '请输入身份证号', trigger: 'change' },
+                    ],
+                }   
             }
         },
         mounted() { 
             this.currentFlight = this.$store.state.currentFlight;
-            console.log(this.currentFlight);
         },
         computed: {
             getTotalPrice()  {
                 var total = 0,ticketprice;
                 for (var i = 0; i < this.passengerList.length;i++)
                 {
-                console.log(i);
                     switch(this.passengerList[i].level)
                     {
                         case 'first':
@@ -150,10 +160,24 @@
                 if(this.passengerList.length <= 1)return;
                 this.passengerList.pop();
             },
-            // 重置方法
-            resetForm() {
-                console.log(this.passengerList);
+            submit() {
+                var result = true;
+                for(var i = 0; i < this.passengerList.length; i++) {
+                    result = this.check(this.$refs[i.toString()][0]) && result;
+                }
+                if(!result)return;
+                alert('submit!');
             },
+            check(item) {
+                item.validate((valid) => {
+                        if (valid) {
+                            return true;
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                        });
+            }
         }
     }
 </script>

@@ -21,6 +21,7 @@
                         <el-col :span="6">
                             <el-button 
                             type="info" 
+                            size="small"
                             plain 
                             @click.stop.prevent=openCollapse()>开具发票</el-button>
                         </el-col>

@@ -1,5 +1,5 @@
 <template>
-    <div class="manager">
+    <div class="manager" v-if="this.$store.state.identity == 2">
         <el-row :gutter="0">
             <el-col :span="2" :offset="7">
                 <el-button 
@@ -159,6 +159,10 @@
                     </el-table-column>
             </el-table>
         </el-row>
+    </div>
+    <div v-else>
+        <el-result icon="error" title="permission denied" subTitle="您没有权限访问此页面">
+        </el-result>
     </div>
 </template>
 
