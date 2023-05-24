@@ -1,0 +1,15 @@
+
+.el-row{
+    margin-top :20px;
+}
+.el-row .nomargin{
+    margin-top:10px;
+}
+.el-radio-group {
+    margin-left:60px;
+}
+.price {
+    margin-top :-10px;
+    font-size : 30px;
+    color :orange;
+}
