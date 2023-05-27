@@ -51,6 +51,7 @@
 </template>
 
 <script>
+const axios = require('axios');
 export default {
     data() {
         var Random = Math.round(Math.random() * 10000) + "";
@@ -196,36 +197,41 @@ export default {
                 password2: '',
                 verificationCode: ''
             },
-            rules: {
-                name: [
-                    { validator: checkName, trigger: 'blur'}
-                ],
-                ID: [
-                    {validator: checkID, trigger: 'blur'}
-                ],
-                phoneNumber: [
-                    { validator: checkPhoneNumber, trigger: 'blur' }
-                ],
-                password1: [
-                    { validator: checkPassword1, trigger: 'blur' }
-                ],
-                password2: [
-                    { validator: checkPassword2, trigger: 'blur' }
-                ],
-                verificationCode: [
-                    { validator: checkVerficationCode, trigger: 'blur' }
-                ],
-            }
+            // rules: {
+            //     name: [
+            //         { validator: checkName, trigger: 'blur'}
+            //     ],
+            //     ID: [
+            //         {validator: checkID, trigger: 'blur'}
+            //     ],
+            //     phoneNumber: [
+            //         { validator: checkPhoneNumber, trigger: 'blur' }
+            //     ],
+            //     password1: [
+            //         { validator: checkPassword1, trigger: 'blur' }
+            //     ],
+            //     password2: [
+            //         { validator: checkPassword2, trigger: 'blur' }
+            //     ],
+            //     verificationCode: [
+            //         { validator: checkVerficationCode, trigger: 'blur' }
+            //     ],
+            // }
         }
     },
     methods: {
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
                 if(valid) {
-                    alert('submit!');
+                    var user = { username: "xcj", password: "111", email: "20351037@buaa.edu.cn", credits: 100 }
+                    axios.post('http://127.0.0.1:8000/register/', user
+                    ).then(function (response) {
+                        console.log(response);
+                    }).catch(function (error) {
+                        console.log(error);
+                    })
                     console.log('submit!');
                 } else {
-                    alert("error!");
                     console.log('error submit!');
                     return false;
                 }

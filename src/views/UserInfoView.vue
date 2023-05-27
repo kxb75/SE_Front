@@ -43,7 +43,7 @@
                         <el-col :span="3" class="userInfo-key"><span class="userInfo-key">出行次数</span></el-col>
                         <el-col :span="1" style="text-align: center;"><span>:</span></el-col>
                         <el-col :span="6" class="userInfo-value">
-                            <span>{{ user.travalNumber }}</span>
+                            <span>{{ user.travelNumber }}</span>
                         </el-col>
                     </el-row>
                     <el-row class="userInfo-button-line">
@@ -74,7 +74,7 @@ export default {
                 ID: '123456200201031234',
                 creditRating: 2,
                 email: '123456@qq.com',
-                travalNumber: 3
+                travelNumber: 3
             }
         }
     },
