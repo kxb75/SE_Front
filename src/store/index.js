@@ -4,22 +4,32 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-    state: {
-        identity: 1, //0表示未登录，1表示用户，2表示管理员
-        currentFlight : {},
+  state: {
+    identity: 1, //0表示未登录，1表示用户，2表示管理员
+    phoneNumber: 0,
+    user: [
+      //
+    ],
+    manager: [
+      //
+    ],
+    currentFlight: {},
+  },
+  getters: {
+  },
+  mutations: {
+    changeIdentity(state, newIdentity) {
+      state.identity = newIdentity;
     },
-    getters: {
+    setPhoneNumber(state, newPhoneNumber) {
+      state.phoneNumber = newPhoneNumber;
     },
-    mutations: {
-        changeIdentity(state, newIdentity) {
-          state.identity = newIdentity;
-        },
-        updateCurrentFlight(state, flight) {
-            state.currentFlight = flight;
-        }
-    },
-    actions: {
-    },
-    modules: {
+    updateCurrentFlight(state, flight) {
+      state.currentFlight = flight;
     }
+  },
+  actions: {
+  },
+  modules: {
+  }
 })
