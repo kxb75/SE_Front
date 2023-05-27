@@ -54,7 +54,7 @@
       @select="handleSelect" 
       >
         <el-menu-item index="/userInfo" style="border-bottom-color: white !important;">用户名字</el-menu-item>
-        <el-menu-item @click="del" style="border-bottom-color: white !important;">注销</el-menu-item>
+        <el-menu-item @click="logout" style="border-bottom-color: white !important;">注销</el-menu-item>
       </el-menu>
     </div>
     <div v-else>
@@ -67,7 +67,7 @@
         @select="handleSelect" 
         >
           <el-menu-item index="/" style="border-bottom-color: white !important;">管理员名字</el-menu-item>
-          <el-menu-item @click="del" style="border-bottom-color: white !important;">注销</el-menu-item>
+          <el-menu-item @click="logout" style="border-bottom-color: white !important;">注销</el-menu-item>
         </el-menu>
     </div>
     <router-view/>
@@ -80,8 +80,8 @@
       handleSelect(key, keyPath) {
         console.log(key, keyPath);
       },
-      del() {
-        this.$store.state.identity = 0;
+      logout() {
+        this.$store.commit('changeIdentity', 0);
         console.log(this.$store.state.identity);
         this.$router.push({path:'/'});
       }

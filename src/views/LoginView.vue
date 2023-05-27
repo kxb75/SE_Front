@@ -73,6 +73,7 @@ export default {
         };
         return {
             activeIndex: '1',
+            currentIndex: 1,
             form: {
                 phoneNumber: '',
                 password: ''
@@ -91,15 +92,44 @@ export default {
         onSubmit() {
             this.$refs['form'].validate(valid => {
                 if (valid) {
+                    var user = {
+                        phoneNumber: this.$data.form.phoneNumber,
+                        password: this.$data.form.password
+                    };
                     console.log('submit!');
+                    // axios.post('http://127.0.0.1:8000/login/', user
+                    // ).then(function (response) {
+                        if(this.$data.currentIndex == 1) {
+                            var token = '123';
+                            var user = {
+                                username: '小明',
+                                password: '123',
+                                credit: 1,
+                                ID: '123456200201031234',
+                                creditRating: 1,
+                                email: '1234',
+                                travelNumber: 5
+                            };
+                            this.$store.commit('changeIdentity', 1);
+                            this.$store.commit('changeUser', user);
+                            this.$store.commit('getToken', token);
+                        } else if(this.$data.currentIndex == 2) {
+                            this.$store.commit('changeIdentity', 2);
+                        }
+                        this.$router.push({path: '/'});
+                    //     console.log(response);
+                    // }).catch(function (error) {
+                    //     alert("something wrong!");
+                    //     console.log(error);
+                    // })
                 } else {
                     console.log('error submit!');
                     return false;
                 }
             });
-            // 登录接口
         },
         handleSelect(key, keyPath) {
+            this.$data.currentIndex = key;
             console.log(key, keyPath);
         }
     }

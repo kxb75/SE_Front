@@ -197,41 +197,49 @@ export default {
                 password2: '',
                 verificationCode: ''
             },
-            // rules: {
-            //     name: [
-            //         { validator: checkName, trigger: 'blur'}
-            //     ],
-            //     ID: [
-            //         {validator: checkID, trigger: 'blur'}
-            //     ],
-            //     phoneNumber: [
-            //         { validator: checkPhoneNumber, trigger: 'blur' }
-            //     ],
-            //     password1: [
-            //         { validator: checkPassword1, trigger: 'blur' }
-            //     ],
-            //     password2: [
-            //         { validator: checkPassword2, trigger: 'blur' }
-            //     ],
-            //     verificationCode: [
-            //         { validator: checkVerficationCode, trigger: 'blur' }
-            //     ],
-            // }
+            rules: {
+                name: [
+                    { validator: checkName, trigger: 'blur'}
+                ],
+                ID: [
+                    {validator: checkID, trigger: 'blur'}
+                ],
+                phoneNumber: [
+                    { validator: checkPhoneNumber, trigger: 'blur' }
+                ],
+                password1: [
+                    { validator: checkPassword1, trigger: 'blur' }
+                ],
+                password2: [
+                    { validator: checkPassword2, trigger: 'blur' }
+                ],
+                verificationCode: [
+                    { validator: checkVerficationCode, trigger: 'blur' }
+                ],
+            }
         }
     },
     methods: {
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
                 if(valid) {
-                    var user = { username: "xcj", password: "111", email: "20351037@buaa.edu.cn", credits: 100 }
+                    var user = { 
+                        username: this.$data.ruleForm.name,
+                        ID: this.$data.ruleForm.ID,
+                        password: this.$data.ruleForm.password1,
+                        phoneNumber: this.$data.ruleForm.phoneNumber,
+                        email: '',
+                        credits: 100
+                    };
                     axios.post('http://127.0.0.1:8000/register/', user
                     ).then(function (response) {
                         console.log(response);
                     }).catch(function (error) {
+                        alert("something wrong!");
                         console.log(error);
                     })
-                    console.log('submit!');
                 } else {
+                    alert('请输入正确信息');
                     console.log('error submit!');
                     return false;
                 }

@@ -49,7 +49,8 @@
 .home-title {
   text-align: center;
   font-size: 300%;
-  margin-bottom: 200px;
+  margin-top: 100px;
+  margin-bottom: 100px;
 }
 
 .home-else {

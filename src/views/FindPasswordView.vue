@@ -13,10 +13,10 @@
 
             <div class="findPassword-form-items">
                 <el-form 
-                class="findPassword-el-form" 
-                ref="findPasswordForm" 
-                :model="findPasswordForm" 
-                label-width="80px" 
+                class="findPassword-el-form"
+                ref="findPasswordForm"
+                :model="findPasswordForm"
+                label-width="80px"
                 :rules="rules">
                     <el-form-item label="手机号" prop="phoneNumber">
                         <el-input placeholder="请输入手机号" v-model="findPasswordForm.phoneNumber" clearable></el-input>
@@ -133,6 +133,16 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
+                    var user= {
+                        phoneNumber: this.$data.findPasswordForm.phoneNumber
+                    }
+                    axios.post('http://127.0.0.1:8000/', user
+                    ).then(function (response) {
+                        console.log(response);
+                    }).catch(function (error) {
+                        alert("something wrong!");
+                        console.log(error);
+                    })
                     console.log('submit!');
                 } else {
                     console.log('error submit!');
