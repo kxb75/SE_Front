@@ -6,11 +6,11 @@
             </el-col>
         </el-row>
         <el-collapse class="result-list" v-model="activeNames">
-            <el-collapse-item v-for="order in orderList" :name="order.id" :key="order.id">
+            <el-collapse-item v-for="order in this.$store.state.currentUser.orderList" :name="order.id" :key="order.id">
                 <template slot="title">
                     <el-row>
                         <el-col :span="4">
-                            订单号：{{order.id}}
+                            订单号：{{order.orderid}}
                         </el-col>
                         <el-col :span="6">
                             购买时间：{{order.purchaseTime}}
@@ -23,7 +23,8 @@
                             type="info" 
                             size="small"
                             plain 
-                            @click.stop.prevent=openCollapse()>开具发票</el-button>
+                            @click.stop.prevent=openCollapse()
+                            @click="exportData(order)">开具发票</el-button>
                         </el-col>
                     </el-row>
                 </template>
@@ -81,12 +82,19 @@
                     width="100">
                     </el-table-column>
                     <el-table-column
+                        label="状态"
                         align="right">
                         <template slot-scope="scope">
-                        <el-button 
-                            v-if="!scope.row.canceled"
-                            size="mini"
-                            @click="temp">申请值机</el-button>
+                            <el-button 
+                                v-if="scope.row.statu == 1"
+                                size="mini"
+                                @click="apply(scope.row)">申请值机</el-button>
+                            <el-button 
+                                v-if="scope.row.statu == 2"
+                                size="mini">审核值机中</el-button>
+                            <el-button 
+                                v-if="scope.row.statu == 3"
+                                size="mini">已值机</el-button>
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -116,8 +124,8 @@
                                 size="mini"
                                 type="danger"
                                 plain
-                                :disabled="scope.row.canceled">
-                                    <div v-if="scope.row.canceled">已退票</div>
+                                :disabled="scope.row.statu >= 2">
+                                    <div v-if="scope.row.statu == 4">已退票</div>
                                     <div v-else>退票</div>
                                 </el-button>
                             </el-popconfirm>
@@ -130,54 +138,77 @@
 </template>
 
 <script>
+const axios = require('axios');
     export default {
         data() {
             return {
                 activeNames: [],
-                orderList : [{
-                    id : 'X00001',
-                    purchaseTime : '2023-05-21',
-                    departureAirport : '北京大兴',
-                    arrivalAirport : '上海浦东',
-                    flight : 'M1234',
-                    flightTime : '2023-05-23 19:30',
-                    ticketList : [{
-                        name : '张三',
-                        seat : '12C',
-                        food : false,
-                        canceled : false,
-                    },{
-                        name : '李四',
-                        seat : '12A',
-                        food : false,
-                        canceled : false,
-                    }]
-                },{
-                    id : 'X00002',
-                    purchaseTime : '2023-05-21',
-                    departureAirport : '北京大兴',
-                    arrivalAirport : '上海浦东',
-                    flight : 'M1234',
-                    flightTime : '2023-05-23 19:30',
-                    ticketList : [{
-                        name : '王五',
-                        seat : '12B',
-                        food : false,
-                        canceled : false,
-                    }]
-                }]
             }
         },
         methods : {
             cancel(row) {
-                row.canceled = true;
+                row.statu = 4;
+                this.updatePassenger(row);
             },
             changeFood(row) {
                 row.food = !row.food; 
+                this.updatePassenger(row);
             },
-            temp() {
-                alert(':D');
+            updatePassenger(passenger) {
+                var req = {
+                    ticketid : passenger.ticketid,
+                    statu : passenger.statu,
+                    food : passenger.food,
+                };
+                axios.post('http://127.0.0.1:8000/updateTicketInfo/',req
+                    ).then(function (response) {
+                        console.log(response);
+                    }).catch(function (error) {
+                        alert("something wrong!");
+                        console.log(error);
+                    });
+            },
+            apply(row) {
+                if(row.statu != 1)return;
+                row.statu = 2;
+                this.updatePassenger(row);
+            },
+            exportData(order){
+                var filecontent = "发 票\n------------------------------------\n";
+                filecontent += "订单号：" + order.orderid + "\n";
+                filecontent += "价格：" + order.price + "\n";
+                filecontent += "购买时间：" + order.purchaseTime + "\n";
+                filecontent += "开具发票时间：" + Date()+ "\n";
+                filecontent += "\n------------------------------------\n";
+                filecontent += "备注：" + order.departureAirport + " >> " + order.arrivalAirport + "\n";
+                var filename = order.orderid;
+			  	//定义文件内容，类型必须为Blob 否则createObjectURL会报错
+			  	let content = new Blob([filecontent])	 
+			  	//生成url对象
+			  	let  urlObject = window.URL || window.webkitURL || window	
+			  	let url = urlObject.createObjectURL(content)	
+			  	//生成<a></a>DOM元素
+			  	let el = document.createElement('a')
+			  	//链接赋值
+			  	el.href = url
+			  	el.download =filename
+			  	//必须点击否则不会下载
+			  	el.click()		
+			  	//移除链接释放资源		
+			    urlObject.revokeObjectURL(url)
             }
+        },
+        mounted() {
+            var req = {
+                phoneNumber : this.$store.state.currentUser.phoneNumber,
+            };
+            axios.get('http://127.0.0.1:8000/getOrderInfo/',req
+                ).then((response) => {
+                    console.log(response);
+                }).catch((error) => {
+                    this.error('获取历史订单失败')
+                    console.log(error);
+                });
         }
     }
 </script>

@@ -8,7 +8,7 @@
                     <el-cascader
                     v-model="form.departureCity"
                     placeholder="北京"
-                    :options="options"
+                    :options="this.$store.state.cities"
                     filterable></el-cascader>
                 </el-form-item>
                 </el-col>
@@ -22,7 +22,7 @@
                     <el-cascader
                     v-model="form.arrivalCity"
                     placeholder="上海"
-                    :options="options"
+                    :options="this.$store.state.cities"
                     filterable></el-cascader>
                 </el-form-item>
                 </el-col>
@@ -53,7 +53,7 @@
             <el-col :span="7" :offset="10"><el-button class="main-button" type="primary" plain @click="submitForm('form')">查询</el-button></el-col>
             <el-col :span="6"><div id="manager" v-if="this.$store.state.identity == 2">
                 <el-button v-on:click="toAddFlight" type="info">添加航班</el-button>
-                <el-button type="info">导出航班</el-button>
+                <el-button type="info" @click="getExportList">导出航班</el-button>
             </div></el-col>
             </el-row>
         <el-divider></el-divider>
@@ -133,6 +133,7 @@
 </template>
 
 <script>
+const axios = require('axios');
     export default {
         data() {
             const validate1 = (rule, value, callback) => {
@@ -155,6 +156,7 @@
                     },
                 },
                 tableData: [{
+                    flightid : '',
                     arrivalAirport: '北京大兴',
                     departureAirport: '上海浦东',
                     flight: 'M1234',
@@ -165,28 +167,22 @@
                     ticket1 : 2,
                     ticket2 : 3,
                     ticket3 : 15,
-                    insurance : {
-                        label : '保险方案1',
-                        price : 3
-                    },
+                    insurance : 2,
                     canceled : false,
-                }],
-                options : [{
-                    value : 'Beijing',
-                    label : '北京',
                 },{
-                    value : 'Shanghai',
-                    label : '上海',
-                },{
-                    value : 'Guangdong',
-                    label : '广东',
-                    children : [{
-                        value : 'Guangzhou',
-                        label : '广州',
-                    },{
-                        value : 'Shenzhen',
-                        label : '深圳',
-                    }]
+                    flightid : '',
+                    arrivalAirport: '北京大兴',
+                    departureAirport: '上海浦东',
+                    flight: 'M1234',
+                    time :'2023-05-23 19:30',
+                    price1 : 1500,
+                    price2 : 1200,
+                    price3 : 800,
+                    ticket1 : 2,
+                    ticket2 : 3,
+                    ticket3 : 15,
+                    insurance : 1,
+                    canceled : false,
                 }],
                 rules: {
                     departureCity: [
@@ -202,6 +198,9 @@
                 }   
             }
         },
+        mounted() {
+            if(this.$store.state.cities.length == 0)this.getCity();
+        },
         methods : {
             toAddFlight() {
                 this.$router.push({path : "/addFlight"});
@@ -210,13 +209,78 @@
                 console.log(this.$refs[formName])
                 this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    alert('submit!');
+                    axios.post('http://127.0.0.1:8000/search/'
+                    ).then(function (response) {
+                        console.log(response);
+                    }).catch(function (error) {
+                        alert("something wrong!");
+                        console.log(error);
+                    });
                 } else {
                     console.log('error submit!!');
                     return false;
                 }
                 });
             },
+            getCity() {
+                axios.post('http://127.0.0.1:8000/getAirport/'
+                    ).then(function (response) {
+                        console.log(response);
+                    }).catch(function (error) {
+                        alert("something wrong!");
+                        console.log(error);
+                    });
+            },
+            getExportList() {
+	            const _self=this
+	            let jsonData = {
+	                trade:{
+	                    tHeader: ["flight","departureAirport","arrivalAirport","time","price1","price2","price3","ticket1","ticket2","ticket3"],
+	                    filterVal: ["flight","departureAirport","arrivalAirport","time","price1","price2","price3","ticket1","ticket2","ticket3"],
+	                    list: _self.tableData
+	                }
+	            }    
+	            _self.exportPathMethod(jsonData)// 调用exportPathMethod对数据进行处理导出
+	            _self.exportShow=false
+	        },
+	        exportPathMethod(data) {
+	            /*
+	            *注：csv文件：","逗号换列，\n换行，\t防止excel将长数字变科学计算法等样式
+	            */
+	            //要导出的json数据
+	            let mainLists = data.trade   //主表
+	            let _self = this
+	            //## 数据处理
+	            //一级表
+	            let mainTitle = mainLists.tHeader;//一级标题
+	            let mainTitleForKey = mainLists.filterVal;//一级过滤
+	            let mainList = mainLists.list;//一级数据
+	            let mainStr = [];
+	            mainStr.push(mainTitle.join("\t,")+"\n");   //标题添加上换列转成字符串并存进数组
+	            for(let i=0;i<mainList.length;i++){
+	                let temp = [];
+	                for(let j=0;j<mainTitleForKey.length;j++){
+	                    temp.push(mainList[i][mainTitleForKey[j]]); //根据过滤器拿出对应的值
+	                }
+	                mainStr.push(temp.join("\t,")+"\n");    //取出来的值加上逗号换列转字符串存数组
+	            }
+	            // console.log(JSON.stringify(mainStr.join("")));//打印文本
+	
+	            //两个表数组转成字符串合并
+	            let merged = mainStr.join("")
+	            //console.log(JSON.stringify(merged));//打印结果
+	            
+	            //## 导出操作
+	            // encodeURIComponent解决中文乱码
+	            const uri = 'data:text/csv;charset=utf-8,\ufeff' + encodeURIComponent(merged)
+	            // 通过创建a标签实现
+	            let link = document.createElement('a')
+	            link.href = uri
+	            // 对下载的文件命名
+	            link.download = `flight.csv`
+	            document.body.appendChild(link)
+	            link.click()
+	        },
             handleMessage (row) {
                 this.$store.commit('updateCurrentFlight',row)
                 this.$router.push({path: "/flightInfo"});

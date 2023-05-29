@@ -60,7 +60,7 @@
                     <el-form-item label="" prop="insurance">
                         <el-row>
                             <el-col :span="12">
-                                {{currentFlight.insurance.label}} （{{currentFlight.insurance.price}}￥） 
+                                {{insurance.label}} （{{insurance.price}}￥） 
                             </el-col>
                             <el-col :span="12">
                                 <el-switch v-model="passenger.insurance"></el-switch>
@@ -95,14 +95,16 @@
 </template>
 
 <script>
+const axios = require('axios');
     export default {
         data() {
             return {
                 currentFlight : {},
+                insurance : {},
                 passengerList: [{
                     index : 0,
-                    id: '',
-                    name: '',
+                    id: this.$store.state.currentUser.id,
+                    name: this.$store.state.currentUser.username,
                     level: 'third',
                     insurance :false}],
                 rules: {
@@ -117,6 +119,7 @@
         },
         mounted() { 
             this.currentFlight = this.$store.state.currentFlight;
+            this.insurance = this.$store.state.optionsInsurance[this.currentFlight.insurance];
         },
         computed: {
             getTotalPrice()  {
@@ -134,9 +137,12 @@
                         case 'third':
                             ticketprice = this.currentFlight.price3;
                             break;
+                        default:
+                            this.error('舱位错误');
+                            break;
                     }
                     total += ticketprice ;
-                    if(this.passengerList[i].insurance) total+=this.currentFlight.insurance.price;
+                    if(this.passengerList[i].insurance) total+=this.insurance.price;
                 }
                 return total;
             },
@@ -166,7 +172,39 @@
                     result = this.check(this.$refs[i.toString()][0]) && result;
                 }
                 if(!result)return;
-                alert('submit!');
+                var req = {
+                    order : [],
+                };
+                for (var passenger in this.passengerList) {
+                    var plevel = 0;
+                    switch(passenger.level)
+                    {
+                        case 'first':
+                            plevel = 1;
+                            break;
+                        case 'second':
+                            plevel = 2;
+                            break;
+                        case 'third':
+                            plevel = 3;
+                            break;
+                        default:
+                            return;
+                    }
+                    var ticket = {
+                        id : passenger.id,
+                        name :passenger.name,
+                        level : plevel,
+                    }
+                    req.order.push(ticket);
+                }
+                axios.post('http://127.0.0.1:8000/updateTicketInfo/',req
+                    ).then(function (response) {
+                        console.log(response);
+                    }).catch((error) => {
+                        this.error('购买失败');
+                        console.log(error);
+                    });
             },
             check(item) {
                 item.validate((valid) => {

@@ -118,9 +118,9 @@
                         align="right"
                         label="状态">
                         <template slot-scope="scope">
-                            <div v-if="scope.row.application">
+                            <div v-if="scope.row.statu != 1">
                                 <el-button
-                                v-if="!scope.row.pass"
+                                v-if="scope.row.statu == 2"
                                 size="medium"
                                 :disabled="tableData[0].canceled"
                                 @click="pass(scope.row)">审核值机</el-button>
@@ -133,7 +133,7 @@
                             <div v-else>
                                 <el-button
                                 size="medium"
-                                v-if="!scope.row.pass"
+                                v-if="scope.row.statu == 1"
                                 type="warning"
                                 :disabled="tableData[0].canceled">未申请值机</el-button>
                             </div>
@@ -167,30 +167,28 @@
 </template>
 
 <script>
+const axios = require('axios');
     export default {
         data() {
             return {
                 tableData : [],
                 passengerList : [{
+                        ticketid : '',
                         name : '张三',
                         id : '100020003000400050',
                         seat : '12C',
+                        statu : 1,
                         food : false,
-                        application : false,
-                        pass : false,
                     },{
+                        ticketid : '',
                         name : '李四',
                         id : '100020003000400051',
                         seat : '12A',
+                        statu : 2,
                         food : false,
-                        application : true,
-                        pass : false,
                     }],
                 changing : false,
             }
-        },
-        mounted() { 
-            this.tableData.push(this.$store.state.currentFlight);
         },
         methods : {
             toBack() {
@@ -201,15 +199,58 @@
             },
             cancel() {
                 this.tableData[0].canceled = true;
+                updateFlight(this.tableData[0]);
             },
             pass(passenger) {
-                if(!passenger.application) return;
-                passenger.pass = true;
+                if(passenger.statu != 2) return;
+                passenger.statu = 3;
+                this.updatePassenger(passenger);
             },
             remove (index) {
+                this.passengerList[index].statu = 4;
+                this.updatePassenger(this.passengerList[index]);
                 this.passengerList.splice(index, 1);
-            }
-        }
+            },
+            updatePassenger(passenger) {
+                var req = {
+                    ticketid : passenger.ticketid,
+                    statu : passenger.statu,
+                    food : passenger.food,
+                };
+                axios.post('http://127.0.0.1:8000/updateTicketInfo/',req
+                    ).then(function (response) {
+                        console.log(response);
+                    }).catch(function (error) {
+                        alert("something wrong!");
+                        console.log(error);
+                    });
+            },
+            updateFlight(flight) {
+                var req = {
+                    flightid : flight.flightid,
+                    time : flight.time,
+                    canceled : flight.canceled
+                };
+                axios.post('http://127.0.0.1:8000/updateFlightInfo/',req
+                    ).then(function (response) {
+                        console.log(response);
+                    }).catch(function (error) {
+                        alert("something wrong!");
+                        console.log(error);
+                    });
+            },
+        },
+        mounted() { 
+            if(this.$store.state.identity != 2)return;
+            this.tableData.push(this.$store.state.currentFlight);
+            axios.post('http://127.0.0.1:8000/getPassengerInfo/'
+                    ).then((response) => {
+                        console.log(response);
+                    }).catch((error) => {
+                        this.error('获取乘客列表失败');
+                        console.log(error);
+                    });
+        },
     }
 </script>
 
