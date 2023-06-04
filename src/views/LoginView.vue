@@ -180,6 +180,8 @@ export default {
                             store.commit('changeUser', user);
                             store.commit('changeToken', token);
                         } else if(currentIndex == 2) {
+                            var token = response.data.token;
+                            store.commit('changeToken', token);
                             store.commit('changeIdentity', 2);
                         }
                         console.log(response);

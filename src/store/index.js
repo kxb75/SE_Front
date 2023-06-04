@@ -62,12 +62,18 @@ export default new Vuex.Store({
         username: '',
         password: '',
         credit: 0,
-        // ID: '',
-        // creditRating: 0,
         email: '',
         travelNumber: 0
       };
       state.token = '';
+      state.searchCondition = {
+        date: new Date(),
+        price: 500,
+        departureCity: '',
+        arrivalCity: '',
+      };
+      state.searchResult = [];
+      state.currentFlight = {};
     }
   },
   actions: {
