@@ -36,6 +36,7 @@
 </template>
 
 <script>
+const axios = require('axios');
 export default {
     data() {
         var checkPhoneNumber = (rule, value, callback) => {
@@ -75,8 +76,8 @@ export default {
             activeIndex: '1',
             currentIndex: 1,
             form: {
-                phoneNumber: '',
-                password: ''
+                phoneNumber: '13001981284',
+                password: '111'
             },
             rules: {
                 phoneNumber: [
@@ -93,35 +94,27 @@ export default {
             this.$refs['form'].validate(valid => {
                 if (valid) {
                     var user = {
-                        phoneNumber: this.$data.form.phoneNumber,
+                        username: this.$data.form.phoneNumber,
                         password: this.$data.form.password
                     };
                     console.log('submit!');
-                    // axios.post('http://127.0.0.1:8000/login/', user
-                    // ).then(function (response) {
+                    axios.post('http://127.0.0.1:8000/login/', user
+                    ).then((response) => {
                         if(this.$data.currentIndex == 1) {
-                            var token = '123';
-                            var user = {
-                                username: '小明',
-                                password: '123',
-                                credit: 1,
-                                ID: '123456200201031234',
-                                creditRating: 1,
-                                email: '1234',
-                                travelNumber: 5
-                            };
+                            console.log(response);
                             this.$store.commit('changeIdentity', 1);
                             this.$store.commit('changeUser', user);
-                            this.$store.commit('getToken', token);
+                            this.$store.commit('getToken', response.data.token);
                         } else if(this.$data.currentIndex == 2) {
                             this.$store.commit('changeIdentity', 2);
+                            this.$store.commit('getToken', response.data.token);
                         }
                         this.$router.push({path: '/'});
-                    //     console.log(response);
-                    // }).catch(function (error) {
-                    //     alert("something wrong!");
-                    //     console.log(error);
-                    // })
+                        console.log(response);
+                    }).catch(function (error) {
+                        alert("something wrong!");
+                        console.log(error);
+                    })
                 } else {
                     console.log('error submit!');
                     return false;

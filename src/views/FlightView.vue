@@ -32,6 +32,7 @@
                 <el-form-item label="起飞时间" prop="date">
                     <el-date-picker
                     v-model="form.date"
+                    value-format="yyyy-MM-dd"
                     :picker-options="pickerOptions"
                     type="date"
                     placeholder="选择日期">
@@ -62,7 +63,7 @@
             stripe
             class="result-list">
             <el-table-column
-            prop="departureAirport"
+            prop="departure_airport"
             label="出发机场"
             width="80">
             </el-table-column>
@@ -75,47 +76,47 @@
                 </template>
             </el-table-column>
             <el-table-column
-            prop="arrivalAirport"
+            prop="arrival_airport"
             label="到达机场"
             width="100">
             </el-table-column>
             <el-table-column
-            prop="time"
+            prop="departure_time"
             label="起飞时间"
             width="160">
             </el-table-column>
             <el-table-column
-            prop="flight"
+            prop="flight_number"
             label="航班号"
             width="100">
             </el-table-column>
             <el-table-column
             label="头等舱"
             width="80">
-            <template slot-scope="scope">{{scope.row.price1}}￥</template>
+            <template slot-scope="scope">{{scope.row.price/10*15}}￥</template>
             </el-table-column>
             <el-table-column
-            prop="ticket1"
+            prop="first_class_seats_available"
             label="余票"
             width="60">
             </el-table-column>
             <el-table-column
             label="商务舱"
             width="80">
-            <template slot-scope="scope">{{scope.row.price2}}￥</template>
+            <template slot-scope="scope">{{scope.row.price/10*13}}￥</template>
             </el-table-column>
             <el-table-column
-            prop="ticket2"
+            prop="business_seats_available"
             label="余票"
             width="60">
             </el-table-column>
             <el-table-column
             label="经济舱"
             width="80">
-            <template slot-scope="scope">{{scope.row.price3}}￥</template>
+            <template slot-scope="scope">{{scope.row.price/10*10}}￥</template>
             </el-table-column>
             <el-table-column
-            prop="ticket3"
+            prop="economy_seats_available"
             label="余票"
             width="60">
             </el-table-column>
@@ -144,46 +145,26 @@ const axios = require('axios');
                 }
             }
             return {
-                form: {
-                    date  : '',
-                    price : 500,
-                    departureCity : '',
-                    arrivalCity : '',
-                },
+                form: {},
+                tableData: [],
                 pickerOptions: {
                     disabledDate(time) {
                         return time.getTime() < Date.now() - 24*60*60*1000;
                     },
                 },
-                tableData: [{
-                    flightid : '',
-                    arrivalAirport: '北京大兴',
-                    departureAirport: '上海浦东',
-                    flight: 'M1234',
-                    time :'2023-05-21 19:30',
-                    price1 : 1500,
-                    price2 : 1200,
-                    price3 : 800,
-                    ticket1 : 2,
-                    ticket2 : 3,
-                    ticket3 : 15,
-                    insurance : 2,
-                    canceled : false,
-                },{
-                    flightid : '',
-                    arrivalAirport: '北京大兴',
-                    departureAirport: '上海浦东',
-                    flight: 'M1234',
-                    time :'2023-05-23 19:30',
-                    price1 : 1500,
-                    price2 : 1200,
-                    price3 : 800,
-                    ticket1 : 2,
-                    ticket2 : 3,
-                    ticket3 : 15,
-                    insurance : 1,
-                    canceled : false,
-                }],
+                // {
+                //     id : '',
+                //     arrival_airport: '北京大兴',
+                //     departure_airport: '上海浦东',
+                //     flight_number: 'M1234',
+                //     departure_time :'2023-05-21 19:30',
+                //     price : 1500,
+                //     business_seats_available :15,
+                //     economy_seats_available : 240,
+                //     first_class_seats_available : 30,
+                //     insurance : 2,
+                //     status : 1,
+                // }
                 rules: {
                     departureCity: [
                         { required: true, message: '请选择出发城市', trigger: 'change' }
@@ -193,13 +174,15 @@ const axios = require('axios');
                         { validator: validate1, trigger: 'blur'}
                     ],
                     date: [
-                        { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+                        { required: true, message: '请选择日期', trigger: 'change' }
                     ],
                 }   
             }
         },
         mounted() {
             if(this.$store.state.cities.length == 0)this.getCity();
+            this.form = this.$store.state.searchCondition;
+            this.tableData = this.$store.state.searchResult;
         },
         methods : {
             toAddFlight() {
@@ -209,9 +192,18 @@ const axios = require('axios');
                 console.log(this.$refs[formName])
                 this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    axios.post('http://127.0.0.1:8000/search/'
-                    ).then(function (response) {
-                        console.log(response);
+                    console.log(this.form);
+                    axios.get('http://127.0.0.1:8000/flight/', {
+                        params : {
+                            departure_city : this.form.departureCity[0],
+                            arrival_city : this.form.arrivalCity[0],
+                            price__lte : this.form.price,
+                            date : this.form.date,
+                        }
+                    }).then((response) => {
+                        this.tableData = response.data;
+                        this.$store.state.searchCondition = this.form;
+                        this.$store.state.searchResult = this.tableData;
                     }).catch(function (error) {
                         alert("something wrong!");
                         console.log(error);
@@ -223,11 +215,11 @@ const axios = require('axios');
                 });
             },
             getCity() {
-                axios.post('http://127.0.0.1:8000/getAirport/'
-                    ).then(function (response) {
-                        console.log(response);
-                    }).catch(function (error) {
-                        alert("something wrong!");
+                axios.get('http://127.0.0.1:8000/getcity/'
+                    ).then((response) => {
+                            this.$store.state.cities = response.data.cities;
+                    }).catch((error) => {
+                        this.error('获取城市信息失败')
                         console.log(error);
                     });
             },
@@ -235,8 +227,8 @@ const axios = require('axios');
 	            const _self=this
 	            let jsonData = {
 	                trade:{
-	                    tHeader: ["flight","departureAirport","arrivalAirport","time","price1","price2","price3","ticket1","ticket2","ticket3"],
-	                    filterVal: ["flight","departureAirport","arrivalAirport","time","price1","price2","price3","ticket1","ticket2","ticket3"],
+	                    tHeader: ["flight_number","departure_city","departure_airport","arrival_city","arrival_airport","departure_time","price","insurance"],
+	                    filterVal: ["flight_number","departure_city","departure_airport","arrival_city","arrival_airport","departure_time","price","insurance"],
 	                    list: _self.tableData
 	                }
 	            }    
@@ -282,7 +274,22 @@ const axios = require('axios');
 	            link.click()
 	        },
             handleMessage (row) {
-                this.$store.commit('updateCurrentFlight',row)
+                var currentFlight = {
+                    id : row.id,
+                    price1 : row.price/10*15,
+                    price2 : row.price/10*13,
+                    price3 : row.price/10*10,
+                    ticket1 : row.first_class_seats_available,
+                    ticket2 : row.business_seats_available,
+                    ticket3 : row.economy_seats_available,
+                    insurance : row.insurance,
+                    departure_airport: row.departure_airport,
+                    arrival_airport: row.arrival_airport,
+                    departure_time : row.departure_time,
+                    flight_number : row.flight_number,
+                    status : row.status, 
+                }
+                this.$store.commit('updateCurrentFlight',currentFlight)
                 this.$router.push({path: "/flightInfo"});
             },
         },

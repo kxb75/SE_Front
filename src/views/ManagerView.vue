@@ -20,7 +20,7 @@
                             stripe
                             class="result-list">
                             <el-table-column
-                            prop="departureAirport"
+                            prop="departure_airport"
                             label="出发机场"
                             width="80">
                             </el-table-column>
@@ -33,12 +33,12 @@
                                 </template>
                             </el-table-column>
                             <el-table-column
-                            prop="arrivalAirport"
+                            prop="arrival_airport"
                             label="到达机场"
                             width="100">
                             </el-table-column>
                             <el-table-column
-                            prop="flight"
+                            prop="flight_number"
                             label="航班号"
                             width="100">
                             </el-table-column>
@@ -46,12 +46,13 @@
                             label="起飞时间"
                             width="250">
                                 <template slot-scope="scope">
-                                    <div v-if="!changing">{{scope.row.time}}</div>
+                                    <div v-if="!changing">{{scope.row.departure_time}}</div>
                                     <div v-else>
                                     <el-date-picker
-                                    v-model="scope.row.time"
+                                    v-model="scope.row.departure_time"
                                     value-format="yyyy-MM-dd hh:mm"
                                     type="datetime"
+                                    :clearable="false"
                                     placeholder="选择日期时间">
                                     </el-date-picker>
                                     </div>
@@ -63,12 +64,12 @@
                     <el-row>
                         <el-button
                             v-if="!changing"
-                            :disabled="tableData[0].canceled"
+                            :disabled="tableData[0].status == 3"
                             @click="change">修改</el-button>
                         <el-button
                             v-else
                             type="primary"
-                            :disabled="tableData[0].canceled"
+                            :disabled="tableData[0].status == 3"
                             @click="change">保存修改</el-button>
                     </el-row>
                     <el-row>
@@ -79,8 +80,8 @@
                                 slot="reference"
                                 type="danger"
                                 plain
-                                :disabled="tableData[0].canceled">
-                                    <div v-if="tableData[0].canceled">已取消</div>
+                                :disabled="tableData[0].status == 3">
+                                    <div v-if="tableData[0].status == 3">已取消</div>
                                     <div v-else>取消航班</div>
                                 </el-button>
                         </el-popconfirm>
@@ -93,12 +94,12 @@
                 :data="passengerList"
                 stripe>
                     <el-table-column
-                    prop="name"
+                    prop="full_name"
                     label="乘客姓名"
                     width="120">
                     </el-table-column>
                     <el-table-column
-                    prop="id"
+                    prop="id_card_number"
                     label="身份证号"
                     width="200">
                     </el-table-column>
@@ -118,24 +119,24 @@
                         align="right"
                         label="状态">
                         <template slot-scope="scope">
-                            <div v-if="scope.row.statu != 1">
+                            <div v-if="scope.row.status != 1">
                                 <el-button
-                                v-if="scope.row.statu == 2"
+                                v-if="scope.row.status == 2"
                                 size="medium"
-                                :disabled="tableData[0].canceled"
+                                :disabled="tableData[0].status == 3"
                                 @click="pass(scope.row)">审核值机</el-button>
                                 <el-button
                                 v-else
                                 size="medium"
                                 type="primary"
-                                :disabled="tableData[0].canceled">已值机</el-button>
+                                :disabled="tableData[0].status == 3">已值机</el-button>
                             </div>
                             <div v-else>
                                 <el-button
                                 size="medium"
-                                v-if="scope.row.statu == 1"
+                                v-if="scope.row.status == 1"
                                 type="warning"
-                                :disabled="tableData[0].canceled">未申请值机</el-button>
+                                :disabled="tableData[0].status == 3">未申请值机</el-button>
                             </div>
                         </template>
                     </el-table-column>
@@ -150,8 +151,8 @@
                                 size="medium"
                                 type="danger"
                                 plain
-                                :disabled="tableData[0].canceled">
-                                    <div v-if="scope.row.canceled">已退票</div>
+                                :disabled="tableData[0].status == 3">
+                                    <div v-if="scope.row.status == 4">已退票</div>
                                     <div v-else>退票</div>
                                 </el-button>
                             </el-popconfirm>
@@ -171,7 +172,14 @@ const axios = require('axios');
     export default {
         data() {
             return {
-                tableData : [],
+                config : {
+                    params : {},
+                    headers :{
+                        'Authorization': 'Token ' + this.$store.state.token
+                    }
+                },
+                temp : '',
+                tableData : [{status : ''}],
                 passengerList : [{
                         ticketid : '',
                         name : '张三',
@@ -195,11 +203,40 @@ const axios = require('axios');
                 this.$router.back();
             },
             change() {
+                if(this.changing) {
+                    var req = {
+                        departure_time : this.tableData[0].departure_time,
+                        arrival_time : this.tableData[0].departure_time,
+                    }
+                    console.log(req);
+                    this.config.params = {};
+                    axios.patch('http://127.0.0.1:8000/flightadmin/' + this.tableData[0].id +'/',req,this.config
+                    ).then((response) => {
+                        console.log(response);
+                    }).catch((error) => {
+                        this.error('修改失败');
+                        this.tableData[0].departure_time = this.temp;
+                        console.log(error);
+                    });
+                }
+                else {
+                    this.temp = this.tableData[0].departure_time;
+                }
                 this.changing = !this.changing;
             },
             cancel() {
-                this.tableData[0].canceled = true;
-                updateFlight(this.tableData[0]);
+                this.tableData[0].status = 4;
+                var req = {
+                    status : 4,
+                }
+                this.config.params = {};
+                axios.patch('http://127.0.0.1:8000/flightadmin/' + this.tableData[0].id +'/',req,this.config
+                    ).then((response) => {
+                        console.log(response);
+                    }).catch((error) => {
+                        this.error('取消失败');
+                        console.log(error);
+                    });
             },
             pass(passenger) {
                 if(passenger.statu != 2) return;
@@ -242,10 +279,15 @@ const axios = require('axios');
         },
         mounted() { 
             if(this.$store.state.identity != 2)return;
-            this.tableData.push(this.$store.state.currentFlight);
-            axios.post('http://127.0.0.1:8000/getPassengerInfo/'
-                    ).then((response) => {
-                        console.log(response);
+            this.tableData[0] = this.$store.state.currentFlight;
+            console.log(this.tableData[0])
+            this.config.params = {
+                id : this.tableData[0].id
+            }
+            axios.get('http://127.0.0.1:8000/passenger/',this.config
+            ).then((response) => {
+                        this.passengerList = response.data;
+                    console.log(this.passengerList);
                     }).catch((error) => {
                         this.error('获取乘客列表失败');
                         console.log(error);

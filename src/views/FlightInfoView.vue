@@ -13,16 +13,16 @@
         </el-row>
         <el-card class="box-card">
             <el-row :gutter="0">
-                航班号：{{this.form.flight}}<span v-if="this.form.canceled" class="canceled">[已取消]</span>
+                航班号：{{this.form.flight_number}}<span v-if="this.form.status == 3" class="canceled">[已取消]</span>
             </el-row>
             <el-row :gutter="0">
-                出发机场： {{this.form.departureAirport}}
+                出发机场： {{this.form.departure_airport}}
             </el-row>
             <el-row :gutter="0">
-                到达机场： {{this.form.arrivalAirport}}
+                到达机场： {{this.form.arrival_airport}}
             </el-row>
             <el-row :gutter="0">
-                起飞时间： {{this.form.time}}
+                起飞时间： {{this.form.departure_time}}
             </el-row>
             <el-divider></el-divider>
             <el-table

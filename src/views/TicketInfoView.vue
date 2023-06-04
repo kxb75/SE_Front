@@ -6,19 +6,19 @@
             </el-col>
         </el-row>
         <el-collapse class="result-list" v-model="activeNames">
-            <el-collapse-item v-for="order in this.$store.state.currentUser.orderList" :name="order.id" :key="order.id">
+            <el-collapse-item v-for="order in this.orderList" :name="order.id" :key="order.id">
                 <template slot="title">
                     <el-row>
                         <el-col :span="4">
-                            订单号：{{order.orderid}}
+                            订单号：{{order.id}}
                         </el-col>
-                        <el-col :span="6">
-                            购买时间：{{order.purchaseTime}}
+                        <el-col :span="8">
+                            购买时间：{{order.tickets[0] ? order.tickets[0].date_of_purchase : ''}}
                         </el-col>
-                        <el-col :span="6">
-                            {{order.departureAirport}} -> {{order.arrivalAirport}}
+                        <el-col :span="8">
+                            {{order.departure_airport}} -> {{order.arrival_airport}}
                         </el-col>
-                        <el-col :span="6">
+                        <el-col :span="4">
                             <el-button 
                             type="info" 
                             size="small"
@@ -29,14 +29,14 @@
                     </el-row>
                 </template>
                 <el-table
-                    :data="order.ticketList"
+                    :data="order.tickets"
                     stripe>
                     <el-table-column
                     prop="departureAirport"
                     label="出发机场"
                     width="80">
                         <template slot-scope="scope">
-                            {{order.departureAirport}}
+                            {{order.departure_airport}}
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -52,7 +52,7 @@
                     label="到达机场"
                     width="100">
                         <template slot-scope="scope">
-                            {{order.arrivalAirport}}
+                            {{order.arrival_airport}}
                         </template>
                     </el-table-column>
                     <el-table-column
@@ -68,11 +68,11 @@
                     label="起飞时间"
                     width="160">
                         <template slot-scope="scope">
-                            {{order.flightTime}}
+                            {{order.departure_time}}
                         </template>
                     </el-table-column>
                     <el-table-column
-                    prop="name"
+                    prop="passenger"
                     label="乘客姓名"
                     width="100">
                     </el-table-column>
@@ -80,20 +80,23 @@
                     prop="seat"
                     label="座位号"
                     width="100">
+                        <template slot-scope="scope">
+                            {{Math.floor(scope.row.seat/6 + 1) + String.fromCharCode((scope.row.seat-1)%6 + 65)}}
+                        </template>
                     </el-table-column>
                     <el-table-column
                         label="状态"
                         align="right">
                         <template slot-scope="scope">
                             <el-button 
-                                v-if="scope.row.statu == 1"
+                                v-if="scope.row.status == 1"
                                 size="mini"
-                                @click="apply(scope.row)">申请值机</el-button>
+                                @click="checkinRequest(scope.row)">申请值机</el-button>
                             <el-button 
-                                v-if="scope.row.statu == 2"
+                                v-if="scope.row.status == 2"
                                 size="mini">审核值机中</el-button>
                             <el-button 
-                                v-if="scope.row.statu == 3"
+                                v-if="scope.row.status == 3"
                                 size="mini">已值机</el-button>
                         </template>
                     </el-table-column>
@@ -101,15 +104,15 @@
                         align="right">
                         <template slot-scope="scope">
                             <el-button
-                            v-if="!scope.row.food"
+                            v-if="!scope.row.food_option"
                             size="mini"
-                            :disabled="scope.row.canceled"
+                            :disabled="scope.row.status == 4"
                             @click="changeFood(scope.row)">预定餐食</el-button>
                             <el-button
                             v-else
                             size="mini"
                             type="primary"
-                            :disabled="scope.row.canceled"
+                            :disabled="scope.row.status == 4"
                             @click="changeFood(scope.row)">取消预定</el-button>
                         </template>
                     </el-table-column>
@@ -124,8 +127,8 @@
                                 size="mini"
                                 type="danger"
                                 plain
-                                :disabled="scope.row.statu >= 2">
-                                    <div v-if="scope.row.statu == 4">已退票</div>
+                                :disabled="scope.row.status >= 2">
+                                    <div v-if="scope.row.status == 4">已退票</div>
                                     <div v-else>退票</div>
                                 </el-button>
                             </el-popconfirm>
@@ -142,36 +145,58 @@ const axios = require('axios');
     export default {
         data() {
             return {
+                config : {
+                    params :{},
+                    headers :{
+                        'Authorization': 'Token ' + this.$store.state.token
+                    }
+                },
+                orderList : [],
                 activeNames: [],
             }
         },
         methods : {
             cancel(row) {
-                row.statu = 4;
-                this.updatePassenger(row);
+                var req = {
+                    id : row.id,
+                };
+                axios.post('http://127.0.0.1:8000/refund/',req,this.config
+                    ).then((response) => {
+                        console.log(response);
+                        row.status = 4;
+                    }).catch((error) => {
+                        this.error('退票失败');
+                        console.log(error);
+                    });
             },
             changeFood(row) {
-                row.food = !row.food; 
-                this.updatePassenger(row);
-            },
-            updatePassenger(passenger) {
+                row.food_option = !row.food_option; 
                 var req = {
-                    ticketid : passenger.ticketid,
-                    statu : passenger.statu,
-                    food : passenger.food,
-                };
-                axios.post('http://127.0.0.1:8000/updateTicketInfo/',req
-                    ).then(function (response) {
+                    food_option : row.food_option,
+                }
+                axios.put('http://127.0.0.1:8000/ticket/' + row.id +'/',req,this.config
+                    ).then((response) => {
                         console.log(response);
-                    }).catch(function (error) {
+                    }).catch((error) => {
                         alert("something wrong!");
                         console.log(error);
                     });
             },
-            apply(row) {
-                if(row.statu != 1)return;
-                row.statu = 2;
-                this.updatePassenger(row);
+            checkinRequest(passenger) {
+                console.log("1");
+                if(passenger.status != 1)return;
+                console.log("1");
+                var req = {
+                    id : passenger.id,
+                };
+                axios.post('http://127.0.0.1:8000/checkinrequest/',req,this.config
+                    ).then((response) => {
+                        console.log(response);
+                        passenger.status = 2;
+                    }).catch((error) => {
+                        this.error('申请失败');
+                        console.log(error);
+                    });
             },
             exportData(order){
                 var filecontent = "发 票\n------------------------------------\n";
@@ -199,12 +224,14 @@ const axios = require('axios');
             }
         },
         mounted() {
-            var req = {
-                phoneNumber : this.$store.state.currentUser.phoneNumber,
+            console.log(this.config)
+            this.config.params = {
+                customer__username : this.$store.state.username
             };
-            axios.get('http://127.0.0.1:8000/getOrderInfo/',req
-                ).then((response) => {
-                    console.log(response);
+            axios.get('http://127.0.0.1:8000/order/',this.config
+            ).then((response) => {
+                    this.orderList = response.data;
+                    console.log(this.orderList)
                 }).catch((error) => {
                     this.error('获取历史订单失败')
                     console.log(error);

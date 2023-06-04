@@ -16,6 +16,11 @@ Vue.prototype.$axios = axios
 Vue.prototype.error = function(msg){
   this.$message.error(msg);
 }
+
+Vue.prototype.success = function(msg){
+  this.$message.success(msg);
+}
+
 new Vue({
   router,
   store,

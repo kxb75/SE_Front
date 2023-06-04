@@ -13,22 +13,22 @@
         </el-row>
         <el-row :gutter="0">
             <el-col :span="8" :offset="4">
-            航班号：{{this.currentFlight.flight}}
+            航班号：{{this.currentFlight.flight_number}}
             </el-col>
         </el-row>
         <el-row :gutter="0">
             <el-col :span="8" :offset="4">
-            出发机场： {{this.currentFlight.departureAirport}}
+            出发机场： {{this.currentFlight.departure_airport}}
             </el-col>
         </el-row>
         <el-row :gutter="0">
             <el-col :span="8" :offset="4">
-            到达机场： {{this.currentFlight.arrivalAirport}}
+            到达机场： {{this.currentFlight.arrival_airport}}
             </el-col>
         </el-row>
         <el-row :gutter="0">
             <el-col :span="8" :offset="4">
-            起飞时间： {{this.currentFlight.time}}
+            起飞时间： {{this.currentFlight.departure_time}}
             </el-col>
         </el-row>
         <el-divider></el-divider>
@@ -57,16 +57,14 @@
                             <el-row class="nomargin">{{currentFlight.price3}}</el-row>
                         </el-radio-button>
                     </el-radio-group>
-                    <el-form-item label="" prop="insurance">
-                        <el-row>
-                            <el-col :span="12">
+                        <el-row class="margin1">
+                            <el-col :span="14" :offset="4">
                                 {{insurance.label}} （{{insurance.price}}￥） 
                             </el-col>
-                            <el-col :span="12">
-                                <el-switch v-model="passenger.insurance"></el-switch>
+                            <el-col :span="4">
+                                <el-switch v-model="passenger.insurance" :disabled="currentFlight.insurance==0"></el-switch>
                             </el-col>
                         </el-row>
-                    </el-form-item>
                 </el-form>  
             </el-card>
             </el-col>
@@ -99,12 +97,18 @@ const axios = require('axios');
     export default {
         data() {
             return {
+                config : {
+                    headers :{
+                        'Authorization': 'Token ' + this.$store.state.token
+                    }
+                },
+                result : false,
                 currentFlight : {},
                 insurance : {},
                 passengerList: [{
                     index : 0,
-                    id: this.$store.state.currentUser.id,
-                    name: this.$store.state.currentUser.username,
+                    id: '123123200202022020',
+                    name: 'fg',
                     level: 'third',
                     insurance :false}],
                 rules: {
@@ -167,17 +171,19 @@ const axios = require('axios');
                 this.passengerList.pop();
             },
             submit() {
-                var result = true;
+                this.result = true;
                 for(var i = 0; i < this.passengerList.length; i++) {
-                    result = this.check(this.$refs[i.toString()][0]) && result;
+                    this.check(this.$refs[i.toString()][0]);
                 }
-                if(!result)return;
+                if(!this.result)return;
                 var req = {
+                    id : this.currentFlight.id,
                     order : [],
                 };
-                for (var passenger in this.passengerList) {
+                console.log(this.passengerList);
+                for (var i = 0; i < this.passengerList.length;i++) {
                     var plevel = 0;
-                    switch(passenger.level)
+                    switch(this.passengerList[i].level)
                     {
                         case 'first':
                             plevel = 1;
@@ -189,32 +195,29 @@ const axios = require('axios');
                             plevel = 3;
                             break;
                         default:
+                            console.log("er");
                             return;
                     }
                     var ticket = {
-                        id : passenger.id,
-                        name :passenger.name,
-                        level : plevel,
+                        id_card_number : this.passengerList[i].id,
+                        full_name : this.passengerList[i].name,
+                        seat_type : plevel,
+                        insurance : this.passengerList[i].insurance,
                     }
                     req.order.push(ticket);
                 }
-                axios.post('http://127.0.0.1:8000/updateTicketInfo/',req
-                    ).then(function (response) {
-                        console.log(response);
+                console.log(req);
+                axios.post('http://127.0.0.1:8000/ticketpurchase/',req,this.config
+                    ).then((response) => {
+                        this.success('购买成功');
+                        this.$router.push({path : '/ticketInfo'})
                     }).catch((error) => {
                         this.error('购买失败');
                         console.log(error);
                     });
             },
             check(item) {
-                item.validate((valid) => {
-                        if (valid) {
-                            return true;
-                        } else {
-                            console.log('error submit!!');
-                            return false;
-                        }
-                        });
+                item.validate((valid) => {this.result &&= valid});
             }
         }
     }

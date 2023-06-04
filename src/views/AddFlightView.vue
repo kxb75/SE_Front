@@ -15,13 +15,14 @@
         <el-form :rules="rules" ref="form" :model="form" label-width="80px">
             <el-row :gutter="0">
                 <el-col :span="7" :offset="3">
-                <el-form-item label="出发机场" prop="departureAirport">
+                <el-form-item label="出发机场" prop="departure_airport">
                     <el-cascader
-                    v-model="form.departureAirport"
+                    v-model="form.departure_airport"
                     placeholder="北京"
                     :show-all-levels="false"
                     :options="this.$store.state.airports"
-                    filterable></el-cascader>
+                    filterable
+                    @change="handleChange1"></el-cascader>
                 </el-form-item>
                 </el-col>
                 <el-col :span="2" :offset="1">
@@ -30,13 +31,14 @@
                     fit="fit"></el-image>
                 </el-col>
                 <el-col :span="7">
-                <el-form-item label="到达机场" prop="arrivalAirport">
+                <el-form-item label="到达机场" prop="arrival_airport">
                     <el-cascader
-                    v-model="form.arrivalAirport"
+                    v-model="form.arrival_airport"
                     placeholder="上海"
                     :show-all-levels="false"
                     :options="this.$store.state.airports"
-                    filterable></el-cascader>
+                    filterable
+                    @change="handleChange2"></el-cascader>
                 </el-form-item>
                 </el-col>
             </el-row>
@@ -44,76 +46,76 @@
                 <el-col :span="5" :offset="3">
                 <el-form-item label="时间" prop="time">
                     <el-date-picker
-                        v-model="form.time"
+                        class="width2"
+                        v-model="form.departure_time"
+                        value-format="yyyy-MM-dd hh:mm:ss"
                         :picker-options="pickerOptions"
                         type="datetime"
-                        placeholder="选择起飞时间">
+                        placeholder="选择起飞时间"
+                        @change="handleChange3">
                     </el-date-picker>
+                </el-form-item>
+                </el-col>
+                <el-col :span="5" :offset="5">
+                <el-form-item label="航班号" prop="flight_number">
+                    <el-input 
+                    class="width2"
+                    v-model="form.flight_number" 
+                    placeholder="请输入航班号"
+                    maxlength="10"></el-input>
                 </el-form-item>
                 </el-col>
             </el-row>
             <el-divider></el-divider>
             <el-row :gutter="0">
-                <el-col :span="4" :offset="7">头等舱</el-col>
-                <el-col :span="4">商务舱</el-col>
-                <el-col :span="4">经济舱</el-col>
+                <el-col :span="4" :offset="4">经济舱价格</el-col>
+                <el-col :span="4">商务舱价格</el-col>
+                <el-col :span="4">头等舱价格</el-col>
+                <el-col :span="4">座位总数</el-col>
+                <el-col :span="2">
+                    <el-tooltip class="item" effect="dark" content="舱位价格按比例调整，座位按固定比例分配" placement="top-end">
+                        <i class="el-icon-question"></i>
+                    </el-tooltip>
+                </el-col>
             </el-row>
             <el-row :gutter="0">
-                <el-col :span="2" :offset="5">票价</el-col>
-                <el-col :span="4">
+                <el-col :span="4" :offset="4">
                 <el-input-number 
-                    v-model="form.price1" 
+                    v-model="form.price" 
+                    class="width1"
                     controls-position="right" 
                     size="medium"
                     :step="20"
                     :min="0" :max="10000"></el-input-number>
                 </el-col>
                 <el-col :span="4">
-                <el-input-number 
-                    v-model="form.price2" 
-                    controls-position="right" 
+                    <el-input
+                    class="width1"
+                    :placeholder="form.price/10*13"
                     size="medium"
-                    :step="20"
-                    :min="0" :max="10000"></el-input-number>
+                    :disabled="true">
+                  </el-input>
+                </el-col>
+                <el-col :span="4">
+                        <el-input
+                        class="width1"
+                        :placeholder="form.price/10*15"
+                        size="medium"
+                        :disabled="true">
+                      </el-input>
                 </el-col>
                 <el-col :span="4">
                 <el-input-number 
-                    v-model="form.price3" 
-                    controls-position="right" 
-                    size="medium"
-                    :step="10"
-                    :min="0" :max="10000"></el-input-number>
-                </el-col>
-            </el-row>
-            <el-row :gutter="0">
-                <el-col :span="2" :offset="5">票量</el-col>
-                <el-col :span="4">
-                <el-input-number 
-                    v-model="form.ticket1" 
-                    controls-position="right" 
-                    size="medium"
-                    :step="1"
-                    :min="0" :max="1000"></el-input-number>
-                </el-col>
-                <el-col :span="4">
-                <el-input-number 
-                    v-model="form.ticket2" 
-                    controls-position="right" 
-                    size="medium"
-                    :step="1"
-                    :min="0" :max="1000"></el-input-number>
-                </el-col>
-                <el-col :span="4">
-                <el-input-number 
-                    v-model="form.ticket3" 
+                    v-model="form.capacity" 
+                    class="width1"
                     controls-position="right" 
                     size="medium"
                     :step="1"
                     :min="0" :max="1000"></el-input-number>
                 </el-col>
             </el-row>
-            <el-row :gutter="0">
-            <el-col :span="7" :offset="3">
+            <el-row :gutter="0" class="margin1">
+            <el-col :span="7" :offset="2">
             <el-form-item label="保险方案">
             <el-select v-model="form.insurance" placeholder="请选择">
                 <el-option
@@ -126,12 +128,14 @@
             <el-col :span="3" :offset="9">
                 <el-upload
                     class="upload-demo"
-                    action="http://127.0.0.1:8000/addFlight2/"
+                    :headers="this.config.headers"
+                    action="http://127.0.0.1:8000/bulkupload/"
                     accept=".csv"
                     :before-upload="beforeUpload"
                     :limit="1"
-                    :on-exceed="handleExceed"
-                    :file-list="fileList">
+                    :file-list="fileList"
+                    :on-error="uploadFileError"
+                    :on-success="uploadFileSuccess">
                     <el-button size="small" type="primary">从文件中导入...</el-button>
                 </el-upload>
             </el-col>
@@ -139,7 +143,7 @@
             </el-form>
         </el-card>
             <el-row :gutter="0">
-            <el-col :span="5" :offset="10"><el-button class="main-button" type="primary" plain @click="submitForm('form')">提交</el-button></el-col>
+            <el-col :span="5" :offset="10"><el-button class="width2" type="primary" plain @click="submitForm('form')">提交</el-button></el-col>
             </el-row>
     </div>
     <div v-else>
@@ -153,25 +157,31 @@ const axios = require('axios');
     export default {
         data() {
             const validate1 = (rule, value, callback) => {
-                if (value[0] == this.form.departureAirport[0]) {
-                    callback(new Error('请选择与出发城市不同的机场'))
+                if (this.form.departure_city[0] == this.form.arrival_city[0]) {
+                    callback(new Error('请选择与出发城市不同的城市'))
                 } else {
                     callback()
                 }
             }
             return {
                 fileList : [],
+                config : {
+                    headers :{
+                        'Authorization': 'Token ' + this.$store.state.token
+                    }
+                },
                 form: {
-                    time  : '',
-                    price1 : 0,
-                    price2 : 0,
-                    price3 : 0,
-                    ticket1 : 0,
-                    ticket2 : 0,
-                    ticket3 : 0,
+                    price : 0,
+                    capacity : 0,
                     insurance : 0,
-                    departureAirport : '',
-                    arrivalAirport : '',
+                    departure_city : '',
+                    arrival_city : '',
+                    departure_time : '',
+                    arrival_time : '',
+                    departure_airport : '',
+                    arrival_airport : '',
+                    flight_number : '',
+                    status : 1,
                 },
                 pickerOptions: {
                     disabledDate(time) {
@@ -179,14 +189,14 @@ const axios = require('axios');
                     },
                 },
                 rules: {
-                    departureAirport: [
+                    departure_airport: [
                         { required: true, message: '请选择出发机场', trigger: 'change' }
                     ],
-                    arrivalAirport: [
+                    arrival_airport: [
                         { required: true, message: '请选择到达机场', trigger: 'change' },
                         { validator: validate1, trigger: 'blur'}
                     ],
-                    time: [
+                    departure_time: [
                         { type: 'date', required: true, message: '请选择起飞时间', trigger: 'change' }
                     ],
                 }   
@@ -200,14 +210,17 @@ const axios = require('axios');
                 this.$router.back();
             },
             submitForm(formName) {
-                console.log(this.$refs[formName])
+                console.log(this.form);
+                console.log(this.$store.state.token);
+                console.log(this.config);
                 this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    axios.post('http://127.0.0.1:8000/addFlight1/', this.form
-                    ).then(function (response) {
-                        console.log(response);
-                    }).catch(function (error) {
-                        alert("something wrong!");
+                    axios.post('http://127.0.0.1:8000/flightadmin/', this.form, this.config
+                    ).then((response) => {
+                        this.success('添加成功');
+                        this.$router.push({path:'flight'})
+                    }).catch((error) => {
+                        this.error('添加失败');
                         console.log(error);
                     });
                 } else {
@@ -217,11 +230,11 @@ const axios = require('axios');
                 });
             },
             getAirports() {
-                axios.post('http://127.0.0.1:8000/getAirport/'
-                    ).then(function (response) {
-                        console.log(response);
-                    }).catch(function (error) {
-                        alert("something wrong!");
+                axios.get('http://127.0.0.1:8000/getairport/'
+                    ).then((response) => {
+                        this.$store.state.airports = response.data.airports;
+                    }).catch((error) => {
+                        this.error('获取机场信息失败');
                         console.log(error);
                     });
             },   
@@ -237,7 +250,27 @@ const axios = require('axios');
                     this.$message.error('上传文件大小不能超过 2MB!');
                 }
                 return isCSV && isLt2M;
-            }
+            },
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
+            uploadFileError() {
+                this.error('上传失败');
+            },
+            uploadFileSuccess() {
+                this.success('上传成功');
+            },
+            handleChange1(value) {
+                this.form.departure_city = value[0];
+                this.form.departure_airport = value[1];
+            },
+            handleChange2(value) {
+                this.form.arrival_city = value[0];
+                this.form.arrival_airport = value[1];
+            },
+            handleChange3(value) {
+                this.form.arrival_time = value;
+            },
         }
     }
 </script>

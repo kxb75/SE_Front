@@ -14,6 +14,10 @@
     color :orange;
 }
 
+.margin1 {
+    margin-top : 40px;
+    margin-bottom : 20px;
+}
 .main-button{
     margin-top : -5px;
     width:200px;
