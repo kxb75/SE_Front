@@ -105,14 +105,17 @@ export default {
         var oflush = () => {
             var token = this.$store.state.token
             var store = this.$store
-            console.log(this.$data.user);
+            var data = this.$data
+            console.log(this.$store.state);
             axios.get('http://127.0.0.1:8000/userdetail/', {
                 headers: {
                     'content-type': 'application/json',
                     'Authorization': 'Token ' + token
                 }
             }).then(function (response) {
+                console.log(store.state);
                 var user = {
+                    phoneNumber: store.state.currentUser.phoneNumber,
                     username: response.data.user_nickname,
                     password: store.state.currentUser.password,
                     credit: response.data.credits,
@@ -122,6 +125,7 @@ export default {
                 console.log(response.data);
                 store.commit('changeUser', user);
             }).catch(function (error) {
+                data.dialogVisible1 = true;
                 console.log(error);
             })
         }
@@ -183,29 +187,7 @@ export default {
         }
     },
     mounted() {
-        var token = this.$store.state.token
-        var store = this.$store
-        var data = this.$data;
-        console.log(this.$data.user);
-        axios.get('http://127.0.0.1:8000/userdetail/', {
-            headers: {
-                'content-type': 'application/json',
-                'Authorization': 'Token ' + token
-            }
-        }).then(function (response) {
-            var user = {
-                username: response.data.user_nickname,
-                password: store.state.currentUser.password,
-                credit: response.data.credits,
-                email: response.data.email,
-                travelNumber: response.data.travel_num
-            };
-            console.log(response.data);
-            store.commit('changeUser', user);
-        }).catch(function (error) {
-            data.dialogVisible1 = true;
-            console.log(error);
-        })
+        this.$data.flush();
     },
     methods: {
         change() {
@@ -244,10 +226,10 @@ export default {
                     }).then(function (response) {
                         console.log(response);
                         var user = {
+                            phoneNumber: store.state.currentUser.phoneNumber,
                             username: postUser.username,
                             password: store.state.currentUser.password,
                             credit: store.state.currentUser.credit,
-                            creditRating: store.state.currentUser.creditRating,
                             email: postUser.email,
                             travelNumber: store.state.currentUser.travelNumber
                         };

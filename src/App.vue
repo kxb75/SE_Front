@@ -67,6 +67,7 @@ export default {
         }
       }).then(function (response) {
         var user = {
+          phoneNumber: store.state.currentUser.phoneNumber,
           username: response.data.user_nickname,
           password: store.state.currentUser.password,
           credit: response.data.credits,

@@ -203,6 +203,7 @@ export default {
                             };
                             console.log(response.data);
                             store.commit('changeUser', user);
+                            console.log(store.state.currentUser);
                         }).catch(function (error) {
                             console.log(error);
                         })

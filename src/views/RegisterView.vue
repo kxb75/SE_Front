@@ -91,7 +91,16 @@
                 <el-button type="primary" @click="dialogVisible5 = false">确 定</el-button>
             </span>
         </el-dialog>
-    </div>
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible6"
+        width="30%">
+            <span>发送验证码成功</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible6 = false">确 定</el-button>
+            </span>
+        </el-dialog>
+</div>
 </template>
 
 <script>
@@ -191,6 +200,7 @@ export default {
             dialogVisible3: false,
             dialogVisible4: false,
             dialogVisible5: false,
+            dialogVisible6: false,
             verificationCodeRandom,
             ruleForm: {
                 name: '',
@@ -277,8 +287,9 @@ export default {
             axios.post('http://127.0.0.1:8000/sendemail/', postEmail
             ).then(function (response) {
                 if(response.data.message == 'error') {
-                    data.dialogVisible5 =true;
+                    data.dialogVisible5 = true;
                 } else {
+                    data.dialogVisible6 = true;
                     data.verificationCodeRandom = response.data.code;
                 }
             }).catch(function (error) {
