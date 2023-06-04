@@ -21,9 +21,12 @@
                     <el-form-item label="手机号" prop="phoneNumber">
                         <el-input placeholder="请输入手机号" v-model="findPasswordForm.phoneNumber" clearable></el-input>
                     </el-form-item>
+                    <el-form-item label="邮箱" prop="email">
+                            <el-input placeholder="请输入邮箱" v-model="findPasswordForm.email" clearable></el-input>
+                    </el-form-item>
                     <el-form-item label="验证码" prop="verificationCode">
                         <el-input placeholder="请输入验证码" v-model="findPasswordForm.verificationCode" 
-                            style="width: 40%;" clearable></el-input>
+                            style="width: 50%;" clearable></el-input>
                         <el-button id="verificationCode-button" type="primary"
                             @click="getVerificationCode">获得验证码</el-button>
                     </el-form-item>
@@ -41,16 +44,68 @@
                 </el-form>
             </div>
         </el-card>
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible1"
+        width="30%">
+            <span>找回密码成功</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible1 = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible2"
+        width="30%">
+            <span>找回密码失败</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible2 = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible3"
+        width="30%">
+            <span>输入错误</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible3 = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible4"
+        width="30%">
+            <span>用户未找到</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible4 = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible5"
+        width="30%">
+            <span>用户邮箱不正确</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible5 = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible6"
+        width="30%">
+            <span>发送验证码失败</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible6 = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
+const axios = require('axios');
 export default {
     data() {
-        var Random = Math.round(Math.random() * 10000) + "";
-        while (Random.length < 4) {
-            Random = "0" + Random;
-        }
+        var verificationCodeRandom
         var checkPhoneNumber = (rule, value, callback) => {
             if (!value) {
                 return callback(new Error('手机号不能为空'));
@@ -66,6 +121,19 @@ export default {
                     }
                 }
                 callback();
+            }, 500);
+        };
+        var checkEmail = (rule, value, callback) => {
+            if (!value) {
+                return callback(new Error('邮箱不能为空'));
+            }
+            setTimeout(() => {
+                var reg = /[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/;
+                if (reg.test(value)) {
+                    return callback();
+                } else {
+                    return callback(new Error('邮箱格式错误'));
+                }
             }, 500);
         };
         var checkPassword1 = (rule, value, callback) => {
@@ -98,7 +166,7 @@ export default {
                 return callback(new Error('验证码不能为空'));
             }
             setTimeout(() => {
-                if (value != Random) {
+                if (value != this.verificationCodeRandom) {
                     callback(new Error('验证码输入错误'));
                 } else {
                     callback();
@@ -106,9 +174,16 @@ export default {
             }, 500);
         };
         return {
-            verificationCodeRandom: Random,
+            dialogVisible1: false,
+            dialogVisible2: false,
+            dialogVisible3: false,
+            dialogVisible4: false,
+            dialogVisible5: false,
+            dialogVisible6: false,
+            verificationCodeRandom,
             findPasswordForm: {
                 phoneNumber: '',
+                email: '',
                 password1: '',
                 password2: '',
                 verificationCode: ''
@@ -116,6 +191,9 @@ export default {
             rules: {
                 phoneNumber: [
                     { validator: checkPhoneNumber, trigger: 'blur' }
+                ],
+                email: [
+                    { validator: checkEmail, trigger: 'blur' }
                 ],
                 password1: [
                     { validator: checkPassword1, trigger: 'blur' }
@@ -131,19 +209,24 @@ export default {
     },
     methods: {
         submitForm(formName) {
+            var router = this.$router
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    var user= {
-                        phoneNumber: this.$data.findPasswordForm.phoneNumber
+                    var postUser= {
+                        username: this.$data.findPasswordForm.phoneNumber,
+                        password: this.$data.findPasswordForm.password1
                     }
-                    axios.post('http://127.0.0.1:8000/', user
+                    var data = this.$data;
+                    axios.post('http://127.0.0.1:8000/retrieve/', postUser
                     ).then(function (response) {
                         console.log(response);
+                        console.log('找回密码成功');
+                        data.dialogVisible1 = true;
+                        router.back();
                     }).catch(function (error) {
-                        alert("something wrong!");
+                        data.dialogVisible2 = true;
                         console.log(error);
                     })
-                    console.log('submit!');
                 } else {
                     console.log('error submit!');
                     return false;
@@ -151,7 +234,41 @@ export default {
             });
         },
         getVerificationCode() {
-            alert(this.$data.verificationCodeRandom);
+            var postCheck = {
+                username: this.$data.findPasswordForm.phoneNumber,
+                email: this.$data.findPasswordForm.email
+            }
+            var postEmail = {
+                email: this.$data.findPasswordForm.email,
+                send_type: 'retrieve'
+            }
+            var data = this.$data;
+            axios.post('http://127.0.0.1:8000/checkemail/', postCheck
+            ).then(function (response) {
+                console.log(response);
+            }).catch(function (error) {
+                if(typeof (error.response) == 'undefined') {
+                    data.dialogVisible3 = true;
+                } else if (error.response.data.message == 'not found user') {
+                    data.dialogVisible4 = true;
+                } else if(error.response.data.message == 'email not equal') {
+                    data.dialogVisible5 = true;
+                } else {
+                    data.dialogVisible3 = true;
+                }
+                console.log(error);
+                return;
+            });
+            axios.post('http://127.0.0.1:8000/sendemail/', postEmail
+            ).then(function (response) {
+                if (response.data.message == 'error') {
+                    data.dialogVisible6 = true;
+                } else {
+                    data.verificationCodeRandom = response.data.code;
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
         },
         toBack() {
             this.$router.back();
@@ -172,7 +289,6 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     margin-top: 10px;
     width: 400px;
     height: 450px;
@@ -196,6 +312,10 @@ export default {
 
 .findPassword-form-items {
     width: 98%;
+}
+
+#verificationCode-button {
+    margin-left: 10px;
 }
 
 #findPassword-button {

@@ -17,13 +17,12 @@
                 ref="ruleForm" 
                 :model="ruleForm" 
                 label-width="80px" 
-                :rules="rules" 
-                size="mini">
+                :rules="rules">
                     <el-form-item label="姓名" prop="name">
                         <el-input placeholder="请输入姓名" v-model="ruleForm.name" clearable></el-input>
                     </el-form-item>
-                    <el-form-item label="身份证号" prop="ID">
-                        <el-input placeholder="请输入身份证号" v-model="ruleForm.ID" clearable></el-input>
+                    <el-form-item label="电子邮箱" prop="email">
+                        <el-input placeholder="请输入电子邮箱" v-model="ruleForm.email" clearable></el-input>
                     </el-form-item>
                     <el-form-item label="手机号" prop="phoneNumber">
                         <el-input placeholder="请输入手机号" v-model="ruleForm.phoneNumber" clearable></el-input>
@@ -47,6 +46,51 @@
                 </el-form>
             </div>
         </el-card>
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible1"
+        width="30%">
+            <span>注册成功</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible1 = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible2"
+        width="30%">
+            <span>用户已存在</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible2 = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible3"
+        width="30%">
+            <span>注册失败</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible3 = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible4"
+        width="30%">
+            <span>请输入正确信息</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible4 = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible5"
+        width="30%">
+            <span>发送验证码失败</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible5 = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -54,10 +98,7 @@
 const axios = require('axios');
 export default {
     data() {
-        var Random = Math.round(Math.random() * 10000) + "";
-            while(Random.length < 4) {
-                Random = "0" + Random;
-            }
+        var verificationCodeRandom
         var checkName = (rule, value, callback) => {
             if (!value) {
                 return callback(new Error('名字不能为空'));
@@ -77,59 +118,16 @@ export default {
                 }
             }, 500);
         };
-        var checkID = (rule, value, callback) => {
+        var checkEmail = (rule, value, callback) => {
             if (!value) {
-                return callback(new Error('身份证不能为空'));
+                return callback(new Error('邮箱不能为空'));
             }
             setTimeout(() => {
-                var year = parseInt(value.substring(6, 10));
-                var month = parseInt(value.substring(10, 12));
-                var day = parseInt(value.substring(12, 14));
-                var numbers = value.substring(0, 17).split('');
-                var last = value.substring(17);
-                var big = [1, 3, 5, 7, 8, 10, 12]
-                var small = [4, 6, 9, 11]
-                if (value.length != 18) {
-                    return callback(new Error('身份证号输入错误'));
-                }
-                if(year == 0) {
-                    return callback(new Error('身份证号输入错误'));
-                }
-                if(month < 1 || month > 12) {
-                    return callback(new Error('身份证号输入错误'));
-                }
-                if(big.indexOf(month) != -1) {
-                    if(day < 1 || day > 31) {
-                        return callback(new Error('身份证号输入错误'));
-                    }
-                    callback();
-                } else if(small.indexOf(month) != -1) {
-                    if(day < 1 || day > 30) {
-                        return callback(new Error('身份证号输入错误'));
-                    }
-                    callback();
+                var reg = /[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/;
+                if (reg.test(value)) {
+                    return callback();
                 } else {
-                    if((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
-                        if(day < 1 || day > 29) {
-                            return callback(new Error('身份证号输入错误'));
-                        }
-                        callback();
-                    } else {
-                        if(day < 1 || day > 28) {
-                            return callback(new Error('身份证号输入错误'));
-                        }
-                        callback();
-                    }
-                }
-                for(var i = 0; i < numbers.length; i++) {
-                    if(numbers[i] < '0' || numbers[i] > '9') {
-                        return callback(new Error('身份证号输入错误'));
-                    }
-                }
-                if((last >= '0' && last <= '9') || last == 'x' || last == 'X') {
-                    callback();
-                } else {
-                    return callback(new Error('身份证号输入错误'));
+                    return callback(new Error('邮箱格式错误'));
                 }
             }, 500);
         };
@@ -180,7 +178,7 @@ export default {
                 return callback(new Error('验证码不能为空'));
             }
             setTimeout(() => {
-                if(value != Random) {
+                if(value != this.verificationCodeRandom) {
                     callback(new Error('验证码输入错误'));
                 } else {
                     callback();
@@ -188,10 +186,16 @@ export default {
             }, 500);
         };
         return {
-            verificationCodeRandom: Random,
+            dialogVisible1: false,
+            dialogVisible2: false,
+            dialogVisible3: false,
+            dialogVisible4: false,
+            dialogVisible5: false,
+            verificationCodeRandom,
             ruleForm: {
                 name: '',
-                ID: '',
+                email: '',
+                // ID: '',
                 phoneNumber: '',
                 password1: '',
                 password2: '',
@@ -201,9 +205,12 @@ export default {
                 name: [
                     { validator: checkName, trigger: 'blur'}
                 ],
-                ID: [
-                    {validator: checkID, trigger: 'blur'}
+                email: [
+                    { validator: checkEmail, trigger: 'blur' }
                 ],
+                // ID: [
+                //     { validator: checkID, trigger: 'blur'}
+                // ],
                 phoneNumber: [
                     { validator: checkPhoneNumber, trigger: 'blur' }
                 ],
@@ -215,38 +222,68 @@ export default {
                 ],
                 verificationCode: [
                     { validator: checkVerficationCode, trigger: 'blur' }
-                ],
+                ]
             }
         }
     },
     methods: {
+        toHome() {
+            this.$router.push({path:'/'});
+        },
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
                 if(valid) {
-                    var user = { 
-                        username: this.$data.ruleForm.name,
-                        ID: this.$data.ruleForm.ID,
+                    var postUser = { 
+                        username: this.$data.ruleForm.phoneNumber,
                         password: this.$data.ruleForm.password1,
-                        phoneNumber: this.$data.ruleForm.phoneNumber,
-                        email: '',
-                        credits: 100
+                        email: this.$data.ruleForm.email,
+                        user_nickname:this.$data.ruleForm.name,
                     };
-                    axios.post('http://127.0.0.1:8000/register/', user
+                    var toHome = this.toHome;
+                    var data = this.$data;
+                    axios.post('http://127.0.0.1:8000/register/', postUser
                     ).then(function (response) {
+                        data.dialogVisible1 = true;
                         console.log(response);
+                        toHome();
                     }).catch(function (error) {
-                        alert("something wrong!");
                         console.log(error);
-                    })
+                        if(typeof(error.response) == 'undefined') {
+                            console.log('no error');
+                        } else {
+                            if(error.response.data.username == 'A user with that username already exists.') {
+                                data.dialogVisible2 = true;
+                                console.log(error);
+                            } else {
+                                data.dialogVisible3 = true;
+                                console.log(error);
+                            }
+                        }
+                        
+                    });
                 } else {
-                    alert('请输入正确信息');
+                    this.$data.dialogVisible4 = true;
                     console.log('error submit!');
                     return false;
                 }
             });
         },
         getVerificationCode() {
-            alert(this.$data.verificationCodeRandom);
+            var postEmail = {
+                email: this.$data.ruleForm.email,
+                send_type: 'register'
+            }
+            var data = this.$data;
+            axios.post('http://127.0.0.1:8000/sendemail/', postEmail
+            ).then(function (response) {
+                if(response.data.message == 'error') {
+                    data.dialogVisible5 =true;
+                } else {
+                    data.verificationCodeRandom = response.data.code;
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
         },
         toBack() {
             this.$router.back();
@@ -268,9 +305,9 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 10px;
-    width: 400px;
-    height: 450px;
+    margin-top: -20px;
+    width: 450px;
+    height: 600px;
 }
 
 .register-title {
@@ -282,11 +319,11 @@ export default {
 .register-back {
     height: 30px;
     float: left;
-    width: 90px;
+    width: 180px;
 }
 
 .register-blank {
-    width: 90px;
+    width: 180px;
 }
 
 .register-form-items {
