@@ -140,24 +140,6 @@
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column
-                        align="right">
-                        <template slot-scope="scope">
-                            <el-popconfirm 
-                            title="确定退票吗？"
-                            @confirm="remove(scope.$index)">
-                                <el-button
-                                slot="reference"
-                                size="medium"
-                                type="danger"
-                                plain
-                                :disabled="tableData[0].status == 3">
-                                    <div v-if="scope.row.status == 4">已退票</div>
-                                    <div v-else>退票</div>
-                                </el-button>
-                            </el-popconfirm>
-                        </template>
-                    </el-table-column>
             </el-table>
         </el-row>
     </div>
@@ -225,54 +207,32 @@ const axios = require('axios');
                 this.changing = !this.changing;
             },
             cancel() {
-                this.tableData[0].status = 4;
                 var req = {
-                    status : 4,
+                    status : 3,
                 }
                 this.config.params = {};
                 axios.patch('http://127.0.0.1:8000/flightadmin/' + this.tableData[0].id +'/',req,this.config
                     ).then((response) => {
                         console.log(response);
+                        this.tableData[0].status = 3;
                     }).catch((error) => {
                         this.error('取消失败');
                         console.log(error);
                     });
             },
             pass(passenger) {
-                if(passenger.statu != 2) return;
-                passenger.statu = 3;
-                this.updatePassenger(passenger);
-            },
-            remove (index) {
-                this.passengerList[index].statu = 4;
-                this.updatePassenger(this.passengerList[index]);
-                this.passengerList.splice(index, 1);
-            },
-            updatePassenger(passenger) {
+                if(passenger.status != 2) return;
                 var req = {
-                    ticketid : passenger.ticketid,
-                    statu : passenger.statu,
-                    food : passenger.food,
+                    id : passenger.ticketid,
                 };
-                axios.post('http://127.0.0.1:8000/updateTicketInfo/',req
-                    ).then(function (response) {
+                console.log(req);
+                this.config.params = {};
+                axios.post('http://127.0.0.1:8000/checkin/',req,this.config
+                    ).then((response) => {
                         console.log(response);
-                    }).catch(function (error) {
-                        alert("something wrong!");
-                        console.log(error);
-                    });
-            },
-            updateFlight(flight) {
-                var req = {
-                    flightid : flight.flightid,
-                    time : flight.time,
-                    canceled : flight.canceled
-                };
-                axios.post('http://127.0.0.1:8000/updateFlightInfo/',req
-                    ).then(function (response) {
-                        console.log(response);
-                    }).catch(function (error) {
-                        alert("something wrong!");
+                        passenger.status = 3;
+                    }).catch((error) => {
+                        this.error('审核失败');
                         console.log(error);
                     });
             },

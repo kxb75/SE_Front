@@ -162,6 +162,7 @@ export default {
                         password: this.$data.form.password
                     };
                     var user = {
+                        phoneNumber: this.$data.form.phoneNumber,
                         username: '',
                         password: this.$data.form.password,
                         credit: 0,
@@ -180,6 +181,8 @@ export default {
                             store.commit('changeUser', user);
                             store.commit('changeToken', token);
                         } else if(currentIndex == 2) {
+                            var token = response.data.token;
+                            store.commit('changeToken', token);
                             store.commit('changeIdentity', 2);
                         }
                         console.log(response);
@@ -191,6 +194,7 @@ export default {
                             }
                         }).then(function (response) {
                             var user = {
+                                phoneNumber: store.state.currentUser.phoneNumber,
                                 username: response.data.user_nickname,
                                 password: store.state.currentUser.password,
                                 credit: response.data.credits,

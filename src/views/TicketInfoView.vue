@@ -183,9 +183,7 @@ const axios = require('axios');
                     });
             },
             checkinRequest(passenger) {
-                console.log("1");
                 if(passenger.status != 1)return;
-                console.log("1");
                 var req = {
                     id : passenger.id,
                 };
@@ -225,13 +223,14 @@ const axios = require('axios');
         },
         mounted() {
             console.log(this.config)
+            console.log(this.$store.state.currentUser)
             this.config.params = {
-                customer__username : this.$store.state.username
+                customer__username : this.$store.state.currentUser.phoneNumber
             };
             axios.get('http://127.0.0.1:8000/order/',this.config
             ).then((response) => {
                     this.orderList = response.data;
-                    console.log(this.orderList)
+                    console.log(response)
                 }).catch((error) => {
                     this.error('获取历史订单失败')
                     console.log(error);

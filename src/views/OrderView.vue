@@ -107,8 +107,8 @@ const axios = require('axios');
                 insurance : {},
                 passengerList: [{
                     index : 0,
-                    id: '123123200202022020',
-                    name: 'fg',
+                    id: '',
+                    name: '',
                     level: 'third',
                     insurance :false}],
                 rules: {
