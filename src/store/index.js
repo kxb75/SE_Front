@@ -8,6 +8,7 @@ export default new Vuex.Store({
     identity: 1, //0表示未登录，1表示用户，2表示管理员
     token: '',
     currentUser: {
+      phoneNumber: '',
       username: '',
       password: '',
       credit: 0,
@@ -58,7 +59,8 @@ export default new Vuex.Store({
       state.currentFlight = flight;
     },
     clear(state) {
-      state.currentFlight = {
+      state.currentUser = {
+        phoneNumber : '',
         username: '',
         password: '',
         credit: 0,
@@ -71,9 +73,9 @@ export default new Vuex.Store({
         price: '',
         departureCity: '',
         arrivalCity: '',
-      };
-      state.searchResult = [];
-      state.currentFlight = {};
+    },
+      state.searchResult = []
+      state.currentFlight = { }
     }
   },
   actions: {

@@ -226,8 +226,9 @@ const axios = require('axios');
         },
         mounted() {
             console.log(this.config)
+            console.log(this.$store.state.currentUser)
             this.config.params = {
-                customer__username : this.$store.state.username
+                customer__username : this.$store.state.currentUser.phoneNumber
             };
             axios.get('http://127.0.0.1:8000/order/',this.config
             ).then((response) => {

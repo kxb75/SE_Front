@@ -2,7 +2,6 @@
   <div id="app" style="position: relative; height: 100%;">
         <el-menu 
         router
-        background-color="#efefff"
         :default-active="this.$route.path"
         class="el-menu" 
         mode="horizontal" 
@@ -68,6 +67,7 @@ export default {
         }
       }).then(function (response) {
         var user = {
+          phoneNumber: store.state.currentUser.phoneNumber,
           username: response.data.user_nickname,
           password: store.state.currentUser.password,
           credit: response.data.credits,

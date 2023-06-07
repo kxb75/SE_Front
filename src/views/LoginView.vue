@@ -163,6 +163,7 @@ export default {
                         password: this.$data.form.password
                     };
                     var user = {
+                        phoneNumber: this.$data.form.phoneNumber,
                         username: '',
                         password: this.$data.form.password,
                         credit: 0,
@@ -194,6 +195,7 @@ export default {
                             }
                         }).then(function (response) {
                             var user = {
+                                phoneNumber: store.state.currentUser.phoneNumber,
                                 username: response.data.user_nickname,
                                 password: store.state.currentUser.password,
                                 credit: response.data.credits,
@@ -202,6 +204,7 @@ export default {
                             };
                             console.log(response.data);
                             store.commit('changeUser', user);
+                            console.log(store.state.currentUser);
                         }).catch(function (error) {
                             console.log(error);
                         })
