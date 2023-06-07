@@ -142,6 +142,9 @@ export default {
             }
             setTimeout(() => {
                 var chars = value.split('');
+                if (chars.length < 6 || chars.length > 15) {
+                    return callback(new Error('密码应该为6-15位'))
+                }
                 for (var i = 0; i < chars.length; i++) {
                     var j = chars[i];
                     if ((j >= 'a' && j <= 'z') || (j >= 'A' && j <= 'Z') || (j >= '0' && j <= '9') || j === '_') {

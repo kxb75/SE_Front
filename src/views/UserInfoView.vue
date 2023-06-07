@@ -138,20 +138,20 @@ export default {
             if (!value) {
                 return callback(new Error('名字不能为空'));
             }
-            setTimeout(() => {
-                var flag = true;
-                for (var i = 0; i < value.length; i++) {
-                    if (value.charCodeAt(i) <= 255) {
-                        flag = false;
-                        break;
-                    }
-                }
-                if (!flag) {
-                    callback(new Error('名字必须是中文'));
-                } else {
-                    callback();
-                }
-            }, 500);
+            // setTimeout(() => {
+            //     var flag = true;
+            //     for (var i = 0; i < value.length; i++) {
+            //         if (value.charCodeAt(i) <= 255) {
+            //             flag = false;
+            //             break;
+            //         }
+            //     }
+            //     if (!flag) {
+            //         callback(new Error('名字必须是中文'));
+            //     } else {
+            //         callback();
+            //     }
+            // }, 500);
         };
         var checkEmail = (rule, value, callback) => {
             if (!value) {
