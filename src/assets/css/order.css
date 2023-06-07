@@ -1,12 +1,15 @@
 
 .el-row{
-    margin-top :10px;
-}
-.el-row .nomargin{
-    margin-top:5px;
+    margin-top :15px;
 }
 .el-radio-group {
-    margin-left:60px;
+    margin-left:40px;
+}
+.order-content {
+    opacity: 95%;
+    position: relative;
+    width:90%;
+    left:5%
 }
 .price {
     margin-top :-10px;
@@ -15,15 +18,14 @@
 }
 
 .margin1 {
-    margin-top : 40px;
-    margin-bottom : 20px;
+    margin-top : 20px;
+    margin-bottom : 10px;
+}
+.margin2 {
+    margin :0;
+    height:20px;
 }
 .main-button{
-    margin-top : -5px;
-    width:200px;
-}
-.title {
-    font-size:25px;
-    font-weight: bolder;
-    text-align: center;
+    margin-top : -10px;
+    width:150px;
 }

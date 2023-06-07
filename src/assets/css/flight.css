@@ -1,10 +1,9 @@
-.title {
-    font-size:25px;
-    font-weight: bolder;
-    text-align: center;
-}
 ::v-deep .el-input--suffix {
     width:150px;
+}
+.el-row.nomargin {
+    margin : 0;
+    height :60px;
 }
 .el-row {
     margin-top:20px;
@@ -13,8 +12,11 @@
     width:200px;
 }
 .result-list {
-    width:70%;
-    left:15%;
+    width:80%;
+    left:10%;
+}
+::v-deep .el-table {
+    opacity: 80%;
 }
 ::v-deep .el-table .el-table__cell {
     text-align: center;
@@ -28,4 +30,10 @@
 .icon {
     width:50px;
     height: 50px;
+}
+
+.el-card {
+    position: relative;
+    width:90%;
+    left:5%;
 }

@@ -1,5 +1,6 @@
 <template>
-    <div class="userInfo">
+    <div class="userInfo back1">
+        <el-card class="card-back">
         <div class="userInfo-content">
             <div class="userInfo-title">
                 <div class="userInfo-content-title">
@@ -45,16 +46,19 @@
                             <span class="value">{{ user.travelNumber }}</span>
                         </el-col>
                     </el-row>
+                    <el-divider></el-divider>
                     <el-row class="userInfo-button-line">
-                        <el-button class="userInfo-button" plain @click="change">
+                        <el-col :span="3" :offset="15">
+                        <el-button class="userInfo-button"  type="info" plain @click="change">
                             <span v-if="!isChange">修改个人信息</span>
                             <span v-else>确定修改</span>
                         </el-button>   
-                    </el-row>
-                    <el-row class="userInfo-button-line">
-                        <router-link to="/changePassword">
-                            <el-button class="userInfo-button" plain>修改密码</el-button>
-                        </router-link>
+                    </el-col>
+                    <el-col :span="3" :offset="0">
+                    <router-link to="/changePassword">
+                        <el-button class="userInfo-button" type="info" plain> 修改密码 </el-button>
+                    </router-link>
+                    </el-col>
                     </el-row>
                 </div>
             </div>
@@ -95,6 +99,7 @@
                 <el-button type="primary" @click="dialogVisible4 = false">确 定</el-button>
             </span>
         </el-dialog>
+    </el-card>
     </div>
 </template>
 
@@ -252,9 +257,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .userInfo {
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -266,16 +270,26 @@ export default {
     align-items: center;
     justify-content: center;
     margin-top: 10px;
-    width: 70%;
+    margin-left:70px;
+    width: 90%;
     height: 450px;
 }
 
 .userInfo-title {
+    margin-top:-100px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 100%;
+}
+.el-card {
+    opacity: 95%;
+    position: relative;
+    left:5%;
+    top:50px;
+    width:90%;
+    height: 600px;
 }
 
 .el-row {

@@ -1,20 +1,22 @@
 <template>
-    <div class="manager" v-if="this.$store.state.identity == 2">
+    <div class="manager back1" v-if="this.$store.state.identity == 2">
+        <el-row class="margin1"></el-row>
+        <el-card class="card-back">
         <el-row :gutter="0">
-            <el-col :span="2" :offset="7">
+            <el-col :span="2" :offset="4">
                 <el-button 
+                plain
                 type="primary" 
                 icon="el-icon-arrow-left"
                 @click="toBack">返回</el-button>
             </el-col>
-            <el-col :span="2" :offset="2">
+            <el-col :span="4" :offset="4">
             <p class="title"> 航班信息</p>
             </el-col>
         </el-row>
         <el-row>
-            <el-card>
                 <el-row>
-                    <el-col :span="20">
+                    <el-col :span="15" :offset="5">
                         <el-table
                             :data="tableData"
                             stripe
@@ -22,7 +24,7 @@
                             <el-table-column
                             prop="departure_airport"
                             label="出发机场"
-                            width="80">
+                            width="88">
                             </el-table-column>
                             <el-table-column
                             prop="icon"
@@ -35,7 +37,7 @@
                             <el-table-column
                             prop="arrival_airport"
                             label="到达机场"
-                            width="100">
+                            width="88">
                             </el-table-column>
                             <el-table-column
                             prop="flight_number"
@@ -64,10 +66,12 @@
                     <el-row>
                         <el-button
                             v-if="!changing"
+                            plain
                             :disabled="tableData[0].status == 3"
                             @click="change">修改</el-button>
                         <el-button
                             v-else
+                            plain
                             type="primary"
                             :disabled="tableData[0].status == 3"
                             @click="change">保存修改</el-button>
@@ -88,7 +92,6 @@
                     </el-row>
                     </el-col>
                 </el-row>
-            </el-card>
             <el-table 
                 class="passenger-list"
                 :data="passengerList"
@@ -122,17 +125,20 @@
                             <div v-if="scope.row.status != 1">
                                 <el-button
                                 v-if="scope.row.status == 2"
+                                plain
                                 size="medium"
                                 :disabled="tableData[0].status == 3"
                                 @click="pass(scope.row)">审核值机</el-button>
                                 <el-button
                                 v-else
+                                plain
                                 size="medium"
                                 type="primary"
                                 :disabled="tableData[0].status == 3">已值机</el-button>
                             </div>
                             <div v-else>
                                 <el-button
+                                plain
                                 size="medium"
                                 v-if="scope.row.status == 1"
                                 type="warning"
@@ -142,6 +148,7 @@
                     </el-table-column>
             </el-table>
         </el-row>
+    </el-card>
     </div>
     <div v-else>
         <el-result icon="error" title="permission denied" subTitle="您没有权限访问此页面">

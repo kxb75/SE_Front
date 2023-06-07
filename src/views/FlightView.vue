@@ -1,5 +1,7 @@
 <template>
-    <div class="flight">
+    <div class="flight back1">
+        <el-row class="nomargin"></el-row>
+        <el-card class="card-back">
         <p class="title"> 航班查询 </p>
         <el-form :rules="rules" ref="form" :model="form" label-width="80px">
             <el-row :gutter="0">
@@ -12,7 +14,7 @@
                     filterable></el-cascader>
                 </el-form-item>
                 </el-col>
-                <el-col :span="1" :offset="1">
+                <el-col :span="1" :offset="2">
                     <el-image class="icon"
                     :src="require('../img/icon.png')"
                     fit="fit"></el-image>
@@ -28,7 +30,7 @@
                 </el-col>
             </el-row>
             <el-row :gutter="0">
-                <el-col :span="5" :offset="7">
+                <el-col :span="6" :offset="7">
                 <el-form-item label="起飞时间" prop="date">
                     <el-date-picker
                     v-model="form.date"
@@ -129,7 +131,9 @@
             </template>
             </el-table-column>
         </el-table>
-
+        <el-row class="nomargin"></el-row>
+    </el-card>
+    <el-row class="nomargin"></el-row>
     </div>
 </template>
 
@@ -146,12 +150,67 @@ const axios = require('axios');
             }
             return {
                 form: {},
-                tableData: [],
-                pickerOptions: {
-                    disabledDate(time) {
-                        return time.getTime() < Date.now() - 24*60*60*1000;
-                    },
-                },
+                tableData: [ {
+                    id : '',
+                    arrival_airport: '北京大兴',
+                    departure_airport: '上海浦东',
+                    flight_number: 'M1234',
+                    departure_time :'2023-05-21 19:30',
+                    price : 1500,
+                    business_seats_available :15,
+                    economy_seats_available : 240,
+                    first_class_seats_available : 30,
+                    insurance : 2,
+                    status : 1,
+                }, {
+                    id : '',
+                    arrival_airport: '北京大兴',
+                    departure_airport: '上海浦东',
+                    flight_number: 'M1234',
+                    departure_time :'2023-05-21 19:30',
+                    price : 1500,
+                    business_seats_available :15,
+                    economy_seats_available : 240,
+                    first_class_seats_available : 30,
+                    insurance : 2,
+                    status : 1,
+                }, {
+                    id : '',
+                    arrival_airport: '北京大兴',
+                    departure_airport: '上海浦东',
+                    flight_number: 'M1234',
+                    departure_time :'2023-05-21 19:30',
+                    price : 1500,
+                    business_seats_available :15,
+                    economy_seats_available : 240,
+                    first_class_seats_available : 30,
+                    insurance : 2,
+                    status : 1,
+                }, {
+                    id : '',
+                    arrival_airport: '北京大兴',
+                    departure_airport: '上海浦东',
+                    flight_number: 'M1234',
+                    departure_time :'2023-05-21 19:30',
+                    price : 1500,
+                    business_seats_available :15,
+                    economy_seats_available : 240,
+                    first_class_seats_available : 30,
+                    insurance : 2,
+                    status : 1,
+                }, {
+                    id : '',
+                    arrival_airport: '北京大兴',
+                    departure_airport: '上海浦东',
+                    flight_number: 'M1234',
+                    departure_time :'2023-05-21 19:30',
+                    price : 1500,
+                    business_seats_available :15,
+                    economy_seats_available : 240,
+                    first_class_seats_available : 30,
+                    insurance : 2,
+                    status : 1,
+                }],
                 // {
                 //     id : '',
                 //     arrival_airport: '北京大兴',
@@ -165,16 +224,22 @@ const axios = require('axios');
                 //     insurance : 2,
                 //     status : 1,
                 // }
+                pickerOptions: {
+                    disabledDate(time) {
+                        return time.getTime() < Date.now() - 24*60*60*1000;
+                    },
+                },
+              
                 rules: {
                     departureCity: [
-                        { required: true, message: '请选择出发城市', trigger: 'change' }
+                        { required: true, message: '请选择出发城市', trigger: 'blur' }
                     ],
                     arrivalCity: [
-                        { required: true, message: '请选择到达城市', trigger: 'change' },
+                        { required: true, message: '请选择到达城市', trigger: 'blur' },
                         { validator: validate1, trigger: 'blur'}
                     ],
                     date: [
-                        { required: true, message: '请选择日期', trigger: 'change' }
+                        { required: true, message: '请选择日期', trigger: 'blur' }
                     ],
                 }   
             }

@@ -1,6 +1,7 @@
 <template>
-    <div class="login">
-        <el-card class="login-content">
+    <div class="login back1">
+        <el-card class="login-content card-back">
+            <p class="title"> 登  录</p>
             <div class="login-content-title">
                 <el-menu :default-active="activeIndex" class="login-menu" mode="horizontal" @select="handleSelect">
                     <el-menu-item class="login-menu-items" index="1">用户</el-menu-item>
@@ -33,7 +34,7 @@
                             </span>
                         </el-form-item>
                     <el-form-item>
-                        <el-button id="login-button" type="primary" @click="onSubmit">登录</el-button>
+                        <el-button id="login-button" type="primary" plain @click="onSubmit">登录</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -227,7 +228,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .login {
     display: flex;
     flex-direction: column;
@@ -239,9 +240,8 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 15px;
-    width: 500px;
-    height: 450px;
+    width: 600px;
+    height: 500px;
 }
 
 .login-content-title {
@@ -249,7 +249,8 @@ export default {
     align-items: center;
     justify-content: center;
     width: 98%;
-    margin-bottom: 15px;
+    margin-top:-20px;
+    margin-bottom: 10px;
 }
 
 .login-el-form {
@@ -259,8 +260,14 @@ export default {
 .login-form-items {
     width: 98%;
 }
-
+.login-menu {
+    background-color: rgba(255, 255, 255, 0);
+}
+.login-menu :hover{
+    background-color: rgba(255, 255, 255, 0.499) !important;
+}
 .login-menu-items {
+    background-color: rgba(255, 255, 255, 0) !important;
     font-weight: bold;
     font-size: 120%;
 }
@@ -293,6 +300,7 @@ export default {
 }
 
 #login-button {
+    margin-left :20px;
     width: 80%;
 }
 </style>

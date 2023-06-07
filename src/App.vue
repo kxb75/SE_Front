@@ -1,5 +1,5 @@
 <template>
-  <div id="app"><!-- style="position: relative; height: 100%;" -->
+  <div id="app">
     <el-container class="app-container">
       <el-head>
         <div v-show="this.$store.state.identity == 0">

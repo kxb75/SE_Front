@@ -1,13 +1,16 @@
 <template>
-    <div class="order">
+    <div class="order back1">
+        <el-row class="margin2" :gutter="0"></el-row>
+        <el-card class="order-content card-back">
         <el-row :gutter="0">
-            <el-col :span="2" :offset="2">
+            <el-col :span="2" :offset="4">
                 <el-button 
+                plain
                 type="primary" 
                 icon="el-icon-arrow-left"
                 @click="toBack">返回</el-button>
             </el-col>
-            <el-col :span="2" :offset="7">
+            <el-col :span="2" :offset="5">
             <p class="title nomargin">订单</p>
             </el-col>
         </el-row>
@@ -31,7 +34,6 @@
             起飞时间： {{this.currentFlight.departure_time}}
             </el-col>
         </el-row>
-        <el-divider></el-divider>
         <el-row :gutter="20">
             <el-col :span="1">.</el-col>
             <el-col v-for="passenger in passengerList" :key="passenger.index" :span="7">
@@ -45,16 +47,16 @@
                     </el-form-item>
                     <el-radio-group v-model="passenger.level">
                         <el-radio-button label="first">
-                            <el-row class="nomargin">头等舱</el-row>
-                            <el-row class="nomargin">{{currentFlight.price1}}</el-row>
+                            <el-row class="margin2">头等舱</el-row>
+                            <el-row class="margin2">{{currentFlight.price1}}￥</el-row>
                         </el-radio-button>
                         <el-radio-button label="second">
-                            <el-row class="nomargin">商务舱</el-row>
-                            <el-row class="nomargin">{{currentFlight.price2}}</el-row>
+                            <el-row class="margin2">商务舱</el-row>
+                            <el-row class="margin2">{{currentFlight.price2}}￥</el-row>
                         </el-radio-button>
                         <el-radio-button label="third">
-                            <el-row class="nomargin">经济舱</el-row>
-                            <el-row class="nomargin">{{currentFlight.price3}}</el-row>
+                            <el-row class="margin2">经济舱</el-row>
+                            <el-row class="margin2">{{currentFlight.price3}}￥</el-row>
                         </el-radio-button>
                     </el-radio-group>
                         <el-row class="margin1">
@@ -70,25 +72,25 @@
             </el-col>
             <el-col :span="2">
             <el-row>
-                <el-button @click="add">添加</el-button>
+                <el-button plain @click="add">添加</el-button>
             </el-row>
             <el-row>
-                <el-button @click="reduce">删除</el-button>
+                <el-button plain @click="reduce">删除</el-button>
             </el-row>
             </el-col>
         </el-row>
-        <el-divider></el-divider>
-        <el-row>
-            <el-col :span="1" :offset="16">
+        <el-row class="margin1">
+            <el-col :span="1" :offset="15">
                 总计：
             </el-col>
             <el-col class="price" :span="2">
                 {{getTotalPrice}}￥
             </el-col>
-            <el-col :span="5">
-                <el-button type="primary" class="main-button" @click="submit()">去支付</el-button>
+            <el-col :span="5" :offset="1">
+                <el-button type="primary" plain class="main-button" @click="submit()">去支付</el-button>
             </el-col>
         </el-row>
+    </el-card>
     </div>
 </template>
 
