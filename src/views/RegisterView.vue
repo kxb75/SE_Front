@@ -243,7 +243,7 @@ export default {
                     };
                     var toLogin = this.toLogin;
                     var data = this.$data;
-                    axios.post('http://127.0.0.1:8000/register/', postUser
+                    axios.post('/api/register/', postUser
                     ).then(function (response) {
                         data.dialogVisible1 = true;
                         console.log(response);
@@ -276,7 +276,7 @@ export default {
                 send_type: 'register'
             }
             var data = this.$data;
-            axios.post('http://127.0.0.1:8000/sendemail/', postEmail
+            axios.post('/api/sendemail/', postEmail
             ).then(function (response) {
                 if(response.data.message == 'error') {
                     data.dialogVisible5 = true;
@@ -295,50 +295,5 @@ export default {
 }
 </script>
 
-<style scoped>
-.register {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.register-content {
-    margin-top: 50px;
-    opacity: 90%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 600px;
-    height: 550px;
-}
-
-.register-title {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-}
-
-.register-back {
-    height: 30px;
-    float: left;
-    width: 180px;
-}
-
-.register-blank {
-    width: 180px;
-}
-
-.register-form-items {
-    width: 98%;
-}
-
-#register-button {
-    width: 80%;
-}
-
-#verificationCode-button {
-    margin-left: 20px;
-}
+<style src='../assets/css/register.css' scoped>
 </style>

@@ -19,7 +19,7 @@
                 <el-col :span="7" :offset="3">
                 <el-form-item label="出发机场" prop="departure_airport">
                     <el-cascader
-                    v-model="form.departure_airport.name"
+                    v-model="form.departure_airport"
                     placeholder="北京"
                     :show-all-levels="false"
                     :options="this.$store.state.airports"
@@ -35,7 +35,7 @@
                 <el-col :span="7">
                 <el-form-item label="到达机场" prop="arrival_airport">
                     <el-cascader
-                    v-model="form.arrival_airport.name"
+                    v-model="form.arrival_airport"
                     placeholder="上海"
                     :show-all-levels="false"
                     :options="this.$store.state.airports"
@@ -135,7 +135,7 @@
                 <el-upload
                     class="upload-demo"
                     :headers="this.config.headers"
-                    action="http://127.0.0.1:8000/bulkupload/"
+                    action="/api/bulkupload/"
                     accept=".csv"
                     :before-upload="beforeUpload"
                     :limit="1"
@@ -163,7 +163,7 @@ const axios = require('axios');
     export default {
         data() {
             const validate1 = (rule, value, callback) => {
-                if(this.form.arrival_airport.name == '') callback(new new Error('请选择到达机场'))
+                if(this.form.arrival_airport == '') callback(new new Error('请选择到达机场'))
                 else{
                     if (this.form.departure_city[0] == this.form.arrival_city[0]) {
                         callback(new Error('请选择与出发城市不同的城市'))
@@ -173,7 +173,7 @@ const axios = require('axios');
                 }
             }
             const validate2 = (rule, value, callback) => {
-                if (this.form.departure_airport.name == '') callback(new new Error('请选择出发机场'))
+                if (this.form.departure_airport == '') callback(new new Error('请选择出发机场'))
                 else callback()
             }
             var checkFlightNumber = (rule, value, callback) => {
@@ -205,8 +205,8 @@ const axios = require('axios');
                     arrival_city : '',
                     departure_time : '',
                     arrival_time : '',
-                    departure_airport : {name:''},
-                    arrival_airport : { name: '' },
+                    departure_airport : '',
+                    arrival_airport : '',
                     flight_number : '',
                     status : 1,
                 },
@@ -261,7 +261,7 @@ const axios = require('axios');
                 console.log(this.config);
                 this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    axios.post('http://127.0.0.1:8000/flightadmin/', this.form, this.config
+                    axios.post('/api/flightadmin/', this.form, this.config
                     ).then((response) => {
                         this.success('添加成功');
                         this.$router.push({path:'flight'})
@@ -276,7 +276,7 @@ const axios = require('axios');
                 });
             },
             getAirports() {
-                axios.get('http://127.0.0.1:8000/getairport/'
+                axios.get('/api/getairport/'
                     ).then((response) => {
                         this.$store.state.airports = response.data.airports;
                     }).catch((error) => {

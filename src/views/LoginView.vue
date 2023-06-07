@@ -54,7 +54,7 @@
         width="30%">
             <span>登录失败</span>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogVisible1 = false">确 定</el-button>
+                <el-button type="primary" @click="dialogVisible2 = false">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -177,7 +177,7 @@ export default {
                     var toHome = this.toHome;
                     var store = this.$store;
                     var data = this.$data;
-                    axios.post('http://127.0.0.1:8000/login/', postUser
+                    axios.post('/api/login/', postUser
                     ).then(function (response) {
                         if(currentIndex == 1) {
                             var token = response.data.token;
@@ -191,7 +191,7 @@ export default {
                         }
                         console.log(response);
                         var token = store.state.token
-                        axios.get('http://127.0.0.1:8000/userdetail/', {
+                        axios.get('/api/userdetail/', {
                             headers: {
                                 'content-type': 'application/json',
                                 'Authorization': 'Token ' + token
@@ -231,80 +231,5 @@ export default {
 }
 </script>
 
-<style scoped>
-.login {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.login-content {
-    margin-top: 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 600px;
-    height: 500px;
-}
-
-.login-content-title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 98%;
-    margin-top:-20px;
-    margin-bottom: 10px;
-}
-
-.login-el-form {
-    padding-right: 55px;
-}
-
-.login-form-items {
-    width: 98%;
-}
-.login-menu {
-    background-color: rgba(255, 255, 255, 0);
-}
-.login-menu :hover{
-    background-color: rgba(255, 255, 255, 0.499) !important;
-}
-.login-menu-items {
-    background-color: rgba(255, 255, 255, 0) !important;
-    font-weight: bold;
-    font-size: 120%;
-}
-
-.login-link {
-    position: relative;
-    height: 15px;
-}
-
-.login-form-link {
-    color: #409EFF;
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    vertical-align: middle;
-    position: relative;
-    text-decoration: none;
-    outline: 0;
-    padding: 0;
-    font-weight: 500;
-    position: absolute;
-    right: 10px;
-    top: 0;
-}
-
-.login-form-link:hover {
-    color: red;
-    text-decoration: underline;
-}
-
-#login-button {
-    margin-left :20px;
-    width: 80%;
-}
+<style src="../assets/css/login.css" scoped>
 </style>

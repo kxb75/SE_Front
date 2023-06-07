@@ -220,7 +220,7 @@ export default {
                         password: this.$data.findPasswordForm.password1
                     }
                     var data = this.$data;
-                    axios.post('http://127.0.0.1:8000/retrieve/', postUser
+                    axios.post('/api/retrieve/', postUser
                     ).then(function (response) {
                         console.log(response);
                         console.log('找回密码成功');
@@ -246,7 +246,7 @@ export default {
                 send_type: 'retrieve'
             }
             var data = this.$data;
-            axios.post('http://127.0.0.1:8000/checkemail/', postCheck
+            axios.post('/api/checkemail/', postCheck
             ).then(function (response) {
                 console.log(response);
             }).catch(function (error) {
@@ -262,7 +262,7 @@ export default {
                 console.log(error);
                 return;
             });
-            axios.post('http://127.0.0.1:8000/sendemail/', postEmail
+            axios.post('/api/sendemail/', postEmail
             ).then(function (response) {
                 if (response.data.message == 'error') {
                     data.dialogVisible6 = true;
@@ -280,48 +280,5 @@ export default {
 }
 </script>
 
-<style scoped>
-.findPassword {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.findPassword-content {
-    opacity: 90%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 450px;
-    height: 500px;
-}
-
-.findPassword-title {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-}
-
-.findPassword-back {
-    height: 30px;
-    float: left;
-    width: 90px;
-}
-
-.findPassword-blank {
-    width: 90px;
-}
-
-.findPassword-form-items {
-    width: 98%;
-}
-
-#verificationCode-button {
-    margin-left: 10px;
-}
-
-#findPassword-button {
-    width: 80%;
-}
+<style src='../assets/css/findPassword.css' scoped>
 </style>

@@ -87,7 +87,7 @@ export default {
       var token = this.$store.state.token
       var store = this.$store
       if(this.$store.state.identity == 1) {
-        axios.get('http://127.0.0.1:8000/userdetail/', {
+        axios.get('/api/userdetail/', {
           headers: {
             'content-type': 'application/json',
             'Authorization': 'Token ' + token

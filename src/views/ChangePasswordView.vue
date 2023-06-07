@@ -46,6 +46,15 @@
                 <el-button type="primary" @click="dialogVisible1 = false">确 定</el-button>
             </span>
         </el-dialog>
+        <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible2"
+        width="30%">
+            <span>修改密码成功</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogVisible2 = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -105,15 +114,16 @@ export default {
         };
         return {
             dialogVisible1: false,
+            dialogVisible2: false,
             changePasswordForm: {
                 oldPassword: '',
                 password1: '',
                 password2: '',
             },
             rules: {
-                oldPassword: [
-                    { validator: checkOldPassword, trigger: 'blur' }
-                ],
+                // oldPassword: [
+                //     { validator: checkOldPassword, trigger: 'blur' }
+                // ],
                 password1: [
                     { validator: checkPassword1, trigger: 'blur' }
                 ],
@@ -133,7 +143,8 @@ export default {
                     var token = this.$store.state.token;
                     var store = this.$store;
                     var data = this.$data;
-                    axios.post('http://127.0.0.1:8000/userchange/', postUser, {
+                    var back = this.toBack;
+                    axios.post('/api/userchange/', postUser, {
                         headers: {
                             'content-type': 'application/json',
                             'Authorization': 'Token ' + token
@@ -142,6 +153,8 @@ export default {
                         console.log(response);
                         store.state.currentUser.password = postUser.password;
                         console.log('submit!');
+                        data.dialogVisible2 = true;
+                        back();
                     }).catch(function (error) {
                         data.dialogVisible1 = true;
                         console.log(error);
@@ -159,51 +172,5 @@ export default {
 }
 </script>
 
-<style scoped>
-.changePassword {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.changePassword-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 10px;
-    width: 600px;
-    height: 450px;
-}
-
-.el-card {
-    opacity: 90%;
-    margin-top: 50px;
-    width: 700px;
-}
-
-.changePassword-title {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-}
-
-.changePassword-back {
-    height: 30px;
-    float: left;
-    width: 150px;
-}
-
-.changePassword-blank {
-    width:100px;
-}
-
-.changePassword-form-items {
-    width: 98%;
-}
-
-#changePassword-button {
-    width: 40%;
-}
+<style src='../assets/css/changePassword.css' scoped>
 </style>

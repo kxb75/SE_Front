@@ -199,7 +199,7 @@ const axios = require('axios');
                     }
                     console.log(req);
                     this.config.params = {};
-                    axios.patch('http://127.0.0.1:8000/flightadmin/' + this.tableData[0].id +'/',req,this.config
+                    axios.patch('/api/flightadmin/' + this.tableData[0].id +'/',req,this.config
                     ).then((response) => {
                         console.log(response);
                     }).catch((error) => {
@@ -218,7 +218,7 @@ const axios = require('axios');
                     status : 3,
                 }
                 this.config.params = {};
-                axios.patch('http://127.0.0.1:8000/flightadmin/' + this.tableData[0].id +'/',req,this.config
+                axios.patch('/api/flightadmin/' + this.tableData[0].id +'/',req,this.config
                     ).then((response) => {
                         console.log(response);
                         this.tableData[0].status = 3;
@@ -234,7 +234,7 @@ const axios = require('axios');
                 };
                 console.log(req);
                 this.config.params = {};
-                axios.post('http://127.0.0.1:8000/checkin/',req,this.config
+                axios.post('/api/checkin/',req,this.config
                     ).then((response) => {
                         console.log(response);
                         passenger.status = 3;
@@ -251,7 +251,7 @@ const axios = require('axios');
             this.config.params = {
                 id : this.tableData[0].id
             }
-            axios.get('http://127.0.0.1:8000/passenger/',this.config
+            axios.get('/api/passenger/',this.config
             ).then((response) => {
                         this.passengerList = response.data;
                     console.log(this.passengerList);

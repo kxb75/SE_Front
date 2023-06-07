@@ -162,7 +162,7 @@ const axios = require('axios');
                 var req = {
                     id : row.id,
                 };
-                axios.post('http://127.0.0.1:8000/refund/',req,this.config
+                axios.post('/api/refund/',req,this.config
                     ).then((response) => {
                         console.log(response);
                         row.status = 4;
@@ -176,7 +176,7 @@ const axios = require('axios');
                 var req = {
                     food_option : row.food_option,
                 }
-                axios.put('http://127.0.0.1:8000/ticket/' + row.id +'/',req,this.config
+                axios.put('/api/ticket/' + row.id +'/',req,this.config
                     ).then((response) => {
                         console.log(response);
                     }).catch((error) => {
@@ -189,7 +189,7 @@ const axios = require('axios');
                 var req = {
                     id : passenger.id,
                 };
-                axios.post('http://127.0.0.1:8000/checkinrequest/',req,this.config
+                axios.post('/api/checkinrequest/',req,this.config
                     ).then((response) => {
                         console.log(response);
                         passenger.status = 2;
@@ -229,7 +229,7 @@ const axios = require('axios');
             this.config.params = {
                 customer__username : this.$store.state.currentUser.phoneNumber
             };
-            axios.get('http://127.0.0.1:8000/order/',this.config
+            axios.get('/api/order/',this.config
             ).then((response) => {
                     this.orderList = response.data;
                     console.log(response)

@@ -94,7 +94,7 @@ export default {
             this.$store.commit('changeFlag', 1);
         },
         getCity() {
-          axios.get('http://127.0.0.1:8000/getcity/'
+          axios.get('/api/getcity/'
           ).then((response) => {
             this.$store.state.cities = response.data.cities;
           }).catch((error) => {
@@ -106,54 +106,5 @@ export default {
 }
 </script>
 
-<style>
-.home {
-  width: 100%;
-  height: 95%;
-  margin-top: 10px;
-}
-
-.home-container {
-  width: 100%;
-  height: 90%;
-  display: block !important;
-}
-
-.home-title {
-  position: absolute;
-  z-index: 999;
-  width: 70%;
-  text-align: center;
-  height: 15%;
-  font-size: 400%;
-  letter-spacing: 15px;
-  left: 15%;
-  color: white;
-  background-color: rgba(255, 255, 255, 0.178);
-  margin-top: 20px;
-}
-
-.home-header {
-  width: 100%;
-  height: 80% !important;
-}
-
-.home-carousel {
-  height: 100%;
-  width: 100%;
-}
-
-.el-carousel__container {
-  height: 100% !important;
-}
-
-.home-card {
-  position: relative;
-  z-index: 999;
-  margin-top: -50px;
-  width: 55%;
-  left: 25%;
-  background-color: rgba(219, 210, 210, 0.971);
-  border-color: rgba(255, 255, 255, 0);
-}
+<style src="../assets/css/home.css" scoped>
 </style>

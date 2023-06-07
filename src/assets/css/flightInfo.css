@@ -4,7 +4,7 @@
 
 .el-row.margin1 {
     margin: 0;
-    height:60px;
+    height:50px;
 }
 
 ::v-deep .el-table .el-table__cell {

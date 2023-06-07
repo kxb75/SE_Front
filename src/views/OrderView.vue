@@ -209,7 +209,7 @@ const axios = require('axios');
                     req.order.push(ticket);
                 }
                 console.log(req);
-                axios.post('http://127.0.0.1:8000/ticketpurchase/',req,this.config
+                axios.post('/api/ticketpurchase/',req,this.config
                     ).then((response) => {
                         this.success('购买成功');
                         this.$router.push({path : '/ticketInfo'})

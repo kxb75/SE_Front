@@ -205,7 +205,7 @@ const axios = require('axios');
                 this.$refs[formName].validate((valid) => {
                 if (valid) {
                     console.log(this.form);
-                    axios.get('http://127.0.0.1:8000/flight/', {
+                    axios.get('/api/flight/', {
                         params : {
                             departure_city : this.form.departureCity[0],
                             arrival_city : this.form.arrivalCity[0],
@@ -227,7 +227,7 @@ const axios = require('axios');
                 });
             },
             getCity() {
-                axios.get('http://127.0.0.1:8000/getcity/'
+                axios.get('/api/getcity/'
                     ).then((response) => {
                             this.$store.state.cities = response.data.cities;
                     }).catch((error) => {

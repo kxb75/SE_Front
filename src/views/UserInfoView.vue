@@ -103,7 +103,7 @@ export default {
             var store = this.$store
             var data = this.$data
             console.log(this.$store.state);
-            axios.get('http://127.0.0.1:8000/userdetail/', {
+            axios.get('/api/userdetail/', {
                 headers: {
                     'content-type': 'application/json',
                     'Authorization': 'Token ' + token
@@ -201,7 +201,7 @@ export default {
                     };
                     var token = this.$store.state.token
                     var store = this.$store
-                    axios.post('http://127.0.0.1:8000/userchange/', postUser, {
+                    axios.post('/api/userchange/', postUser, {
                         headers: {
                             'content-type': 'application/json',
                             'Authorization': 'Token ' + token
@@ -226,7 +226,7 @@ export default {
                         console.log(error);
                     })
                 }).catch(() => {
-                    this.$data.dialogVisible4 = true;
+                    data.dialogVisible4 = true;
                     console.log('修改失败');
                 })
             }
@@ -235,87 +235,5 @@ export default {
 }
 </script>
 
-<style scoped>
-.userInfo {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.userInfo-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 10px;
-    margin-left:70px;
-    width: 90%;
-    height: 450px;
-}
-
-.userInfo-title {
-    margin-top:-100px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-}
-.el-card {
-    opacity: 95%;
-    position: relative;
-    left:10%;
-    top:50px;
-    width:80%;
-    height: 500px;
-}
-
-.el-row {
-    margin-bottom: 20px;
-}
-
-.userInfo-content-message {
-    width: 100%;
-}
-
-.userInfo-line {
-    width: 100%;
-    display: flex;
-    height: 40px;
-    font-size: 120%;
-}
-
-.userInfo-key {
-    width: 25%;
-    text-align: right;
-    align-items: center;
-    padding-right: 5px;
-    display: flex;
-    flex-direction: row-reverse;
-}
-
-.userInfo-value {
-    padding-left: 5px;
-}
-
-.userInfo-button-line {
-    margin-top: 8px;
-    margin-left: 15px;
-}
-
-.el-input__inner {
-    /* font-size: large; */
-    border-color: #47C9FF;
-}
-
-.dot {
-    text-align: center;
-    align-self: center;
-}
-
-.value {
-    display: flex;
-    height: 100%;
-    align-items: center;
-}
+<style src='../assets/css/userInfo.css' scoped>
 </style>
