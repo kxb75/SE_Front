@@ -1,5 +1,5 @@
 <template>
-    <div class="ticketInfo back1">
+    <div class="ticketInfo">
         <el-row class="margin1"></el-row>
         <el-card class="card-back">
         <el-row>
@@ -128,7 +128,6 @@
                                 slot="reference"
                                 size="mini"
                                 type="danger"
-                                plain
                                 :disabled="scope.row.status >= 2">
                                     <div v-if="scope.row.status == 4">已退票</div>
                                     <div v-else>退票</div>

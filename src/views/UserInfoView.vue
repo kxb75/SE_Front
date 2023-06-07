@@ -48,13 +48,13 @@
                     </el-row>
                     <el-divider></el-divider>
                     <el-row class="userInfo-button-line">
-                        <el-col :span="3" :offset="15">
+                        <el-col :span="3" :offset="14">
                         <el-button class="userInfo-button"  type="info" plain @click="change">
                             <span v-if="!isChange">修改个人信息</span>
                             <span v-else>确定修改</span>
                         </el-button>   
                     </el-col>
-                    <el-col :span="3" :offset="0">
+                    <el-col :span="3" :offset="1">
                     <router-link to="/changePassword">
                         <el-button class="userInfo-button" type="info" plain> 修改密码 </el-button>
                     </router-link>
@@ -286,10 +286,10 @@ export default {
 .el-card {
     opacity: 95%;
     position: relative;
-    left:5%;
+    left:10%;
     top:50px;
-    width:90%;
-    height: 600px;
+    width:80%;
+    height: 500px;
 }
 
 .el-row {

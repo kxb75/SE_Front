@@ -55,11 +55,11 @@
           </el-menu>
         </div>
       </el-header>
-      <el-main class="app-main">
+      <el-main class="app-main back1">
         <router-view/>
       </el-main>
       <el-footer class="app-footer">
-        <h5 class="app-foot">© 2023 BUAA Software Engineering Team. All rights reserved.</h5>
+        <p class="app-foot">© 2023 BUAA Software Engineering Team. All rights reserved.</p>
       </el-footer>
     </el-container>
     <el-dialog
@@ -148,20 +148,31 @@ export default {
 .app-container {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
+}
+
+.el-header {
+  position: fixed;
+  height: 60px;
+  width: 100%;
+  z-index: 999;
+  padding: 0;
 }
 
 .app-main {
   height: 90%;
   overflow: auto;
+  padding: 0;
 }
 
 .app-footer {
   height: 40px !important;
   width: 100%;
   align-items: center;
+  position: fixed;
+  bottom: 0;
   background-color: rgba(240, 248, 255, 0) !important;
+  z-index: 999;
 }
 
 .app-foot {

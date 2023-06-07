@@ -37,3 +37,38 @@
     width:90%;
     left:5%;
 }
+
+::v-deep .el-table,
+::v-deep .el-table tr,
+::v-deep .el-table td,
+::v-deep .el-table th {
+    background-color: transparent !important;
+    border-color: transparent;
+    color: black;
+}
+
+::v-deep .el-table,
+::v-deep .el-table__expanded-cell {
+    background-color: transparent;
+    border-color: transparent;
+    color: black;
+}
+
+::v-deep .el-table tr {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: black;
+}
+
+::v-deep .el-table tbody tr:hover>td {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: black;
+}
+
+::v-deep .el-table--enable-row-transition .el-table__body td,
+::v-deep .el-table .cell {
+    background-color: transparent;
+    border-color: transparent !important;
+    color: black;
+}

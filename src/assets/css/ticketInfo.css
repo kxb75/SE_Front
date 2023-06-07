@@ -20,9 +20,9 @@
 
 .el-card {
     position: relative;
-    width:90%;
-    min-height: 600px;
-    left:5%;
+    width:80%;
+    min-height: 500px;
+    left:10%;
 }
 
 ::v-deep .el-collapse-item__header {
@@ -32,4 +32,56 @@
 
 .el-collapse-item {
     background-color: rgba(240, 248, 255, 0);
+}
+
+::v-deep .el-table,
+::v-deep .el-table tr,
+::v-deep .el-table td,
+::v-deep .el-table th {
+    background-color: transparent !important;
+    border-color: transparent;color: black;
+}
+
+::v-deep .el-table,
+::v-deep .el-table__expanded-cell {
+    background-color: transparent;
+    border-color: transparent;color: black;
+}
+
+::v-deep .el-table tr {
+    background-color: transparent !important;
+    border-color: transparent!important;color: black;
+}
+
+::v-deep .el-table tbody tr:hover>td {
+    background-color: transparent !important;
+    border-color: transparent!important;color: black;
+}
+
+::v-deep .el-table--enable-row-transition .el-table__body td,
+::v-deep .el-table .cell {
+    background-color: transparent;
+    border-color: transparent !important;color: black;
+}
+
+::v-deep .el-collapse-item__wrap {
+    background-color: transparent;
+    border-color: transparent !important;
+}
+
+::v-deep .el-collapse-item__header,
+::v-deep .el-collapse-item__wrap {
+    background-color: transparent;
+    border-color: transparent !important;
+}
+
+::v-deep .el-collapse,
+::v-deep .el-collapse-item__wrap {
+    border-color: transparent !important;
+}
+
+
+::v-deep .el-collapse-item__content {
+    background-color: transparent;
+    border-color: transparent !important;
 }
