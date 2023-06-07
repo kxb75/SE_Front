@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <el-container class="app-container">
-      <el-head>
+      <el-header>
         <div v-show="this.$store.state.identity == 0">
           <el-menu 
           router
@@ -54,7 +54,7 @@
             <el-menu-item style="float: right; border-bottom-color: transparent;">管理员</el-menu-item>
           </el-menu>
         </div>
-      </el-head>
+      </el-header>
       <el-main class="app-main">
         <router-view/>
       </el-main>
@@ -86,26 +86,27 @@ export default {
     flush() {
       var token = this.$store.state.token
       var store = this.$store
-      console.log(this.$data.user);
-      axios.get('http://127.0.0.1:8000/userdetail/', {
-        headers: {
-          'content-type': 'application/json',
-          'Authorization': 'Token ' + token
-        }
-      }).then(function (response) {
-        var user = {
-          phoneNumber: store.state.currentUser.phoneNumber,
-          username: response.data.user_nickname,
-          password: store.state.currentUser.password,
-          credit: response.data.credits,
-          email: response.data.email,
-          travelNumber: response.data.travel_num
-        };
-        console.log(response.data);
-        store.commit('changeUser', user);
-      }).catch(function (error) {
-        console.log(error);
-      })
+      if(this.$store.state.identity == 1) {
+        axios.get('http://127.0.0.1:8000/userdetail/', {
+          headers: {
+            'content-type': 'application/json',
+            'Authorization': 'Token ' + token
+          }
+        }).then(function (response) {
+          var user = {
+            phoneNumber: store.state.currentUser.phoneNumber,
+            username: response.data.user_nickname,
+            password: store.state.currentUser.password,
+            credit: response.data.credits,
+            email: response.data.email,
+            travelNumber: response.data.travel_num
+          };
+          console.log(response.data);
+          store.commit('changeUser', user);
+        }).catch(function (error) {
+          console.log(error);
+        })
+      }
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
@@ -135,7 +136,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #app {
   height: 100%;
   width: 100%;
@@ -160,11 +161,13 @@ export default {
   height: 40px !important;
   width: 100%;
   align-items: center;
+  background-color: rgba(240, 248, 255, 0);
 }
 
 .app-foot {
   color: rgba(128, 128, 128, 0.681);
   text-align: center;
   font-size: small;
+  background-color: rgba(240, 248, 255, 0);
 }
 </style>

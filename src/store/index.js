@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    identity: 1, //0表示未登录，1表示用户，2表示管理员
+    identity: 0, //0表示未登录，1表示用户，2表示管理员
     token: '',
     currentUser: {
       phoneNumber: '',

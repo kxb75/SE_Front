@@ -51,6 +51,7 @@
 </template>
 
 <script>
+const axios = require('axios');
 export default {
     data() {
         const validate1 = (rule, value, callback) => {
@@ -63,7 +64,6 @@ export default {
         };
         return {
             form: {},
-            tableData: [],
             pickerOptions: {
                 disabledDate(time) {
                     return time.getTime() < Date.now() - 24 * 60 * 60 * 1000;
@@ -90,9 +90,18 @@ export default {
     methods: {
         subForm() {
             this.$store.state.searchCondition = this.form;
-            this.$router.push({ path: "/flight" });
+            this.$router.push({ path: "/flight", params:{ departureCity: this.$data.departureCity} });
             this.$store.commit('changeFlag', 1);
         },
+        getCity() {
+          axios.get('http://127.0.0.1:8000/getcity/'
+          ).then((response) => {
+            this.$store.state.cities = response.data.cities;
+          }).catch((error) => {
+            this.error('获取城市信息失败')
+            console.log(error);
+          });
+        }
     }
 }
 </script>
