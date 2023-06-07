@@ -179,8 +179,7 @@ export default {
 
 .el-card {
     opacity: 90%;
-    margin-top: -100px;
-    margin-left:-200px;
+    margin-top: 50px;
     width: 700px;
 }
 

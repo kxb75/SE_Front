@@ -111,21 +111,9 @@ export default {
         var checkName = (rule, value, callback) => {
             if (!value) {
                 return callback(new Error('名字不能为空'));
+            } else {
+                return callback();
             }
-            // setTimeout(() => {
-            //     var flag = true;
-            //     for (var i = 0; i < value.length; i++) {
-            //         if (value.charCodeAt(i) <= 255) {
-            //             flag = false;
-            //             break;
-            //         }
-            //     }
-            //     if (!flag) {
-            //         callback(new Error('名字必须是中文'));
-            //     } else {
-            //         callback();
-            //     }
-            // }, 500);
         };
         var checkEmail = (rule, value, callback) => {
             if (!value) {
@@ -164,14 +152,14 @@ export default {
             setTimeout(() => {
                 var chars = value.split('');
                 if (chars.length < 6 || chars.length > 15) {
-                    return callback(new Error('密码应该为6-15位'))
+                    return callback(new Error('密码应该为6-15位'));
                 }
                 for(var i = 0; i < chars.length; i++) {
                     var j = chars[i];
                     if((j >= 'a' && j <= 'z') || (j >= 'A' && j <= 'Z') || (j >= '0' && j <= '9') || j === '_') {
                         callback();
                     } else {
-                        return callback(new Error('密码应由a-z、A-Z、0-9、下划线组成'))
+                        return callback(new Error('密码应由a-z、A-Z、0-9、下划线组成'));
                     }
                 }
             }, 500);
@@ -244,7 +232,8 @@ export default {
             this.$router.push({path:'/login'});
         },
         submitForm(formName) {
-            this.$refs[formName].validate(valid => {
+            console.log(this.$refs['ruleForm'])
+            this.$refs[formName].validate((valid) => {
                 if(valid) {
                     var postUser = { 
                         username: this.$data.ruleForm.phoneNumber,

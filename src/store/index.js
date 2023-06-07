@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    identity: 0, //0表示未登录，1表示用户，2表示管理员
+    identity: 2, //0表示未登录，1表示用户，2表示管理员
     token: '',
     currentUser: {
       phoneNumber: '',
@@ -16,8 +16,8 @@ export default new Vuex.Store({
       travelNumber: 0
     },
     searchCondition: {
-      date: new Date(),
-      price: '',
+      date: undefined,
+      price: undefined,
       departureCity: '',
       arrivalCity: '',
     },
@@ -73,8 +73,8 @@ export default new Vuex.Store({
       };
       state.token = '';
       state.searchCondition = {
-        date: new Date(),
-        price: '',
+        date: undefined,
+        price: undefined,
         departureCity: '',
         arrivalCity: '',
     },

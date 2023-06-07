@@ -65,15 +65,6 @@
         </div>
         <el-dialog
         title="提示"
-        :visible.sync="dialogVisible1"
-        width="30%">
-            <span>获得个人信息错误</span>
-            <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogVisible1 = false">确 定</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog
-        title="提示"
         :visible.sync="dialogVisible2"
         width="30%">
             <span>修改成功</span>
@@ -129,29 +120,17 @@ export default {
                 };
                 console.log(response.data);
                 store.commit('changeUser', user);
-            }).catch(function (error) {
-                data.dialogVisible1 = true;
+            }).catch((error) => {
+                this.error('获取个人信息失败')
                 console.log(error);
             })
         }
         var checkName = (rule, value, callback) => {
             if (!value) {
                 return callback(new Error('名字不能为空'));
+            } else {
+                return callback();
             }
-            // setTimeout(() => {
-            //     var flag = true;
-            //     for (var i = 0; i < value.length; i++) {
-            //         if (value.charCodeAt(i) <= 255) {
-            //             flag = false;
-            //             break;
-            //         }
-            //     }
-            //     if (!flag) {
-            //         callback(new Error('名字必须是中文'));
-            //     } else {
-            //         callback();
-            //     }
-            // }, 500);
         };
         var checkEmail = (rule, value, callback) => {
             if (!value) {
@@ -167,7 +146,6 @@ export default {
             }, 500);
         };
         return {
-            dialogVisible1: false,
             dialogVisible2: false,
             dialogVisible3: false,
             dialogVisible4: false,
@@ -248,7 +226,7 @@ export default {
                         console.log(error);
                     })
                 }).catch(() => {
-                    data.dialogVisible4 = true;
+                    this.$data.dialogVisible4 = true;
                     console.log('修改失败');
                 })
             }

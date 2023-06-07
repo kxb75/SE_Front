@@ -19,7 +19,7 @@
                 <el-col :span="7" :offset="3">
                 <el-form-item label="出发机场" prop="departure_airport">
                     <el-cascader
-                    v-model="form.departure_airport"
+                    v-model="form.departure_airport.name"
                     placeholder="北京"
                     :show-all-levels="false"
                     :options="this.$store.state.airports"
@@ -35,7 +35,7 @@
                 <el-col :span="7">
                 <el-form-item label="到达机场" prop="arrival_airport">
                     <el-cascader
-                    v-model="form.arrival_airport"
+                    v-model="form.arrival_airport.name"
                     placeholder="上海"
                     :show-all-levels="false"
                     :options="this.$store.state.airports"
@@ -46,7 +46,7 @@
             </el-row>
             <el-row :gutter="0">
                 <el-col :span="7" :offset="3">
-                <el-form-item label="时间" prop="time">
+                <el-form-item label="时间" prop="departure_time">
                     <el-date-picker
                         class="width2"
                         v-model="form.departure_time"
@@ -70,9 +70,9 @@
             </el-row>
             <el-divider></el-divider>
             <el-row :gutter="0">
-                <el-col :span="4" :offset="4">经济舱价格</el-col>
+                <el-col :span="4" :offset="3">经济舱价格</el-col>
                 <el-col :span="4">商务舱价格</el-col>
-                <el-col :span="4">头等舱价格</el-col>
+                <el-col :span="5">头等舱价格</el-col>
                 <el-col :span="4">座位总数</el-col>
                 <el-col :span="2">
                     <el-tooltip class="item" effect="dark" content="舱位价格按比例调整，座位按固定比例分配" placement="top-end">
@@ -81,7 +81,8 @@
                 </el-col>
             </el-row>
             <el-row :gutter="0">
-                <el-col :span="4" :offset="4">
+                <el-col :span="6" :offset="1">
+                <el-form-item prop="price">
                 <el-input-number 
                     v-model="form.price" 
                     class="width1"
@@ -89,6 +90,7 @@
                     size="medium"
                     :step="20"
                     :min="0" :max="10000"></el-input-number>
+                    </el-form-item>
                 </el-col>
                 <el-col :span="4">
                     <el-input
@@ -98,7 +100,7 @@
                     :disabled="true">
                   </el-input>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="2" :offset="1">
                         <el-input
                         class="width1"
                         :placeholder="form.price/10*15"
@@ -106,7 +108,8 @@
                         :disabled="true">
                       </el-input>
                 </el-col>
-                <el-col :span="4">
+                <el-col :span="5">
+                    <el-form-item prop="capacity">
                 <el-input-number 
                     v-model="form.capacity" 
                     class="width1"
@@ -114,11 +117,12 @@
                     size="medium"
                     :step="1"
                     :min="0" :max="1000"></el-input-number>
+                    </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="0" class="margin1">
             <el-col :span="7" :offset="2">
-            <el-form-item label="保险方案">
+            <el-form-item label="保险方案" prop="insurance">
             <el-select v-model="form.insurance" placeholder="请选择">
                 <el-option
                 v-for="item in this.$store.state.optionsInsurance"
@@ -159,8 +163,29 @@ const axios = require('axios');
     export default {
         data() {
             const validate1 = (rule, value, callback) => {
-                if (this.form.departure_city[0] == this.form.arrival_city[0]) {
-                    callback(new Error('请选择与出发城市不同的城市'))
+                if(this.form.arrival_airport.name == '') callback(new new Error('请选择到达机场'))
+                else{
+                    if (this.form.departure_city[0] == this.form.arrival_city[0]) {
+                        callback(new Error('请选择与出发城市不同的城市'))
+                    } else {
+                        callback()
+                    }
+                }
+            }
+            const validate2 = (rule, value, callback) => {
+                if (this.form.departure_airport.name == '') callback(new new Error('请选择出发机场'))
+                else callback()
+            }
+            var checkFlightNumber = (rule, value, callback) => {
+                if (this.form.flight_number.length != 5) {
+                        callback(new Error('航班号应为5位字符,例如CA025'))
+                    } else {
+                        callback()
+                }
+            }
+            var checkNum =  (rule, value, callback) => {
+                if (value <= 0) {
+                    callback(new Error('    请输入一个正数'))
                 } else {
                     callback()
                 }
@@ -173,15 +198,15 @@ const axios = require('axios');
                     }
                 },
                 form: {
-                    price : 0,
-                    capacity : 0,
+                    price : 1000,
+                    capacity : 200,
                     insurance : 0,
                     departure_city : '',
                     arrival_city : '',
                     departure_time : '',
                     arrival_time : '',
-                    departure_airport : '',
-                    arrival_airport : '',
+                    departure_airport : {name:''},
+                    arrival_airport : { name: '' },
                     flight_number : '',
                     status : 1,
                 },
@@ -192,15 +217,34 @@ const axios = require('axios');
                 },
                 rules: {
                     departure_airport: [
-                        { required: true, message: '请选择出发机场', trigger: 'change' }
+                        { required: true, message: '请选择出发机场', trigger: 'change' },
+                    { validator: validate2, trigger: 'blur' }
+
                     ],
                     arrival_airport: [
                         { required: true, message: '请选择到达机场', trigger: 'change' },
                         { validator: validate1, trigger: 'blur'}
                     ],
                     departure_time: [
-                        { type: 'date', required: true, message: '请选择起飞时间', trigger: 'change' }
+                        { required: true, message: '请选择起飞时间', trigger: 'blur' }
                     ],
+                    price: [
+                        { required: true, message: '请选择价格', trigger: 'change' },
+                        { validator: checkNum, trigger: 'change' }
+                    ],
+                    capacity: [
+                        { required: true, message: '请选择座位数', trigger: 'change' },
+                        { validator: checkNum, trigger: 'change' }
+                    ],
+                    insurance: [
+                        { required: true, message: '请选择保险方案', trigger: 'blur' }
+                    ],
+                    flight_number: [
+                        { required: true, message: '请输入航班号', trigger: 'change' },
+                        { validator: checkFlightNumber, trigger: 'change'}
+                    ],
+
+
                 }   
             }
         },
