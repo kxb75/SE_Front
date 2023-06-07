@@ -1,28 +1,38 @@
 <template>
-    <div class="flight-info">
+    <div class="flight-info back1">
+        <el-row class="margin1" :gutter="0"></el-row>
+        <el-card class="box-card card-back">
         <el-row :gutter="0">
-            <el-col :span="2" :offset="2">
+            <el-col :span="2" :offset="3">
                 <el-button 
+                plain
                 type="primary" 
                 icon="el-icon-arrow-left"
                 @click="toBack">返回</el-button>
             </el-col>
-            <el-col :span="2" :offset="7">
+            <el-col :span="4" :offset="5">
             <p class="title"> 航班信息 </p>
             </el-col>
         </el-row>
-        <el-card class="box-card">
             <el-row :gutter="0">
+                <el-col :span="8" :offset="3">
                 航班号：{{this.form.flight_number}}<span v-if="this.form.status == 3" class="canceled">[已取消]</span>
+            </el-col>
             </el-row>
             <el-row :gutter="0">
+                <el-col :span="8" :offset="3">
                 出发机场： {{this.form.departure_airport}}
+            </el-col>
             </el-row>
             <el-row :gutter="0">
+                <el-col :span="8" :offset="3">
                 到达机场： {{this.form.arrival_airport}}
+            </el-col>
             </el-row>
             <el-row :gutter="0">
+                <el-col :span="8" :offset="3">
                 起飞时间： {{this.form.departure_time}}
+            </el-col>
             </el-row>
             <el-divider></el-divider>
             <el-table
@@ -48,9 +58,9 @@
                 width="120">
                 </el-table-column>
             </el-table>
-        </el-card>
-        <el-button v-if="this.$store.state.identity == 1" class="main-button" type="primary" @click="toOrder">去订票</el-button>
-        <el-button v-if="this.$store.state.identity == 2" class="main-button" type="info" @click="toManager">管理航班</el-button>
+        <el-button v-if="this.$store.state.identity == 1" class="main-button" type="primary" plain @click="toOrder">去订票</el-button>
+        <el-button v-if="this.$store.state.identity == 2" class="main-button" type="info" plain @click="toManager">管理航班</el-button>
+    </el-card>
     </div>
 </template>
 

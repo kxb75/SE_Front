@@ -8,3 +8,27 @@ body {
     height: 100%;
     margin: 0;
 }
+
+*{
+    font-family: STZhongsong;
+}
+
+.title {
+    font-size:27px;
+    height:25px;
+    font-weight: bolder;
+    text-align: center;
+}
+
+.back1 {
+    position: relative;
+    width:100%;
+    min-height:91.8%;
+    background:linear-gradient(to bottom right, rgba(74, 233, 239, 0.919), rgba(73, 141, 242, 0.732), rgba(74, 233, 239, 0.93));
+    background-image: url(../../img/back.jpg);
+}
+
+.el-card.card-back {
+    background-color: rgba(255, 255, 255, 0);
+    border-color: rgba(0, 0, 0, 0);
+}

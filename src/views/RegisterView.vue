@@ -1,6 +1,6 @@
 <template>
-    <div class="register">
-        <el-card class="register-content">
+    <div class="register back1">
+        <el-card class="register-content card-back">
             <div class="register-title">
                 <div class="register-back">
                     <el-button icon="el-icon-back" @click="toBack">返回</el-button>
@@ -38,10 +38,10 @@
                     <el-form-item label="验证码" prop="verificationCode">
                         <el-input placeholder="请输入验证码" v-model="ruleForm.verificationCode" 
                             style="width: 40%;" clearable></el-input>
-                        <el-button id="verificationCode-button" type="primary" @click="getVerificationCode">获得验证码</el-button>
+                        <el-button id="verificationCode-button" type="primary" plain @click="getVerificationCode">获得验证码</el-button>
                     </el-form-item>
                     <el-form-item size="medium">
-                        <el-button id="register-button" type="primary" @click="submitForm('ruleForm')">注册</el-button>
+                        <el-button id="register-button" type="primary" plain @click="submitForm('ruleForm')">注册</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -52,7 +52,7 @@
         width="30%">
             <span>注册成功</span>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogVisible1 = false">确 定</el-button>
+                <el-button type="primary" plain @click="dialogVisible1 = false">确 定</el-button>
             </span>
         </el-dialog>
         <el-dialog
@@ -61,7 +61,7 @@
         width="30%">
             <span>用户已存在</span>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogVisible2 = false">确 定</el-button>
+                <el-button type="primary" plain @click="dialogVisible2 = false">确 定</el-button>
             </span>
         </el-dialog>
         <el-dialog
@@ -292,7 +292,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .register {
     display: flex;
     flex-direction: column;
@@ -301,12 +301,12 @@ export default {
 }
 
 .register-content {
+    opacity: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: -20px;
-    width: 450px;
+    width: 600px;
     height: 600px;
 }
 

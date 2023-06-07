@@ -1,0 +1,19 @@
+.el-card {
+    position: relative;
+    width:80%;
+    height:600px;
+    left:10%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-color: rgba(0, 0, 0, 0);
+}
+.el-row {
+    height:50px;
+}
+::v-deep .el-divider {
+    color :rgb(0, 0, 0);
+}
+
+h1 {
+    font-size: 40px;
+    font-family: STKaiti;
+}

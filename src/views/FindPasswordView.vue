@@ -1,6 +1,6 @@
 <template>
-    <div class="findPassword">
-        <el-card class="findPassword-content">
+    <div class="findPassword back1">
+        <el-card class="findPassword-content card-back">
             <div class="findPassword-title">
                 <div class="findPassword-back">
                     <el-button icon="el-icon-back" @click="toBack">返回</el-button>
@@ -27,7 +27,7 @@
                     <el-form-item label="验证码" prop="verificationCode">
                         <el-input placeholder="请输入验证码" v-model="findPasswordForm.verificationCode" 
                             style="width: 50%;" clearable></el-input>
-                        <el-button id="verificationCode-button" type="primary"
+                        <el-button id="verificationCode-button" plain type="primary"
                             @click="getVerificationCode">获得验证码</el-button>
                     </el-form-item>
                     <el-form-item label="密码" prop="password1">
@@ -39,7 +39,7 @@
                             type="password" clearable></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button id="findPassword-button" type="primary" @click="submitForm('findPasswordForm')">确定</el-button>
+                        <el-button id="findPassword-button" type="primary" plain @click="submitForm('findPasswordForm')">确定</el-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -277,7 +277,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .findPassword {
     display: flex;
     flex-direction: column;
@@ -286,12 +286,12 @@ export default {
 }
 
 .findPassword-content {
+    opacity: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 10px;
-    width: 400px;
-    height: 450px;
+    width: 450px;
+    height: 500px;
 }
 
 .findPassword-title {

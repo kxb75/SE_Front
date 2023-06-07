@@ -1,9 +1,9 @@
 <template>
-    <div class="changePassword">
-        <el-card class="changePassword-content">
+    <div class="changePassword back1">
+        <el-card class="changePassword-content card-back">
             <div class="changePassword-title">
                 <div class="changePassword-back">
-                    <el-button icon="el-icon-back" @click="toBack">返回</el-button>
+                    <el-button icon="el-icon-back" plain @click="toBack">返回</el-button>
                 </div>
                 <div class="changePassword-content-title">
                     <h2>修改密码</h2>
@@ -156,7 +156,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .changePassword {
     display: flex;
     flex-direction: column;
@@ -174,8 +174,11 @@ export default {
     height: 450px;
 }
 
-.changePassword-content .el-card {
-    width: 80%;
+.el-card {
+    opacity: 90%;
+    margin-top: -100px;
+    margin-left:-200px;
+    width: 700px;
 }
 
 .changePassword-title {

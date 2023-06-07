@@ -1,17 +1,19 @@
 <template>
-    <div class="addFlight" v-if="this.$store.state.identity == 2">
+    <div class="addFlight back1" v-if="this.$store.state.identity == 2">
+        <el-row class="margin2"></el-row>
+        <el-card class="card-back">
         <el-row :gutter="0">
-            <el-col :span="2" :offset="5">
+            <el-col :span="2" :offset="3">
                 <el-button 
+                plain
                 type="primary" 
                 icon="el-icon-arrow-left"
                 @click="toBack">返回</el-button>
             </el-col>
-            <el-col :span="2" :offset="4">
+            <el-col :span="4" :offset="5">
             <p class="title"> 添加航班</p>
             </el-col>
         </el-row>
-        <el-card>
         <el-form :rules="rules" ref="form" :model="form" label-width="80px">
             <el-row :gutter="0">
                 <el-col :span="7" :offset="3">
@@ -43,7 +45,7 @@
                 </el-col>
             </el-row>
             <el-row :gutter="0">
-                <el-col :span="5" :offset="3">
+                <el-col :span="7" :offset="3">
                 <el-form-item label="时间" prop="time">
                     <el-date-picker
                         class="width2"
@@ -56,7 +58,7 @@
                     </el-date-picker>
                 </el-form-item>
                 </el-col>
-                <el-col :span="5" :offset="5">
+                <el-col :span="5" :offset="3">
                 <el-form-item label="航班号" prop="flight_number">
                     <el-input 
                     class="width2"
@@ -136,15 +138,15 @@
                     :file-list="fileList"
                     :on-error="uploadFileError"
                     :on-success="uploadFileSuccess">
-                    <el-button size="small" type="primary">从文件中导入...</el-button>
+                    <el-button size="small" plain type="primary">从文件中导入...</el-button>
                 </el-upload>
             </el-col>
             </el-row>
             </el-form>
-        </el-card>
             <el-row :gutter="0">
-            <el-col :span="5" :offset="10"><el-button class="width2" type="primary" plain @click="submitForm('form')">提交</el-button></el-col>
+            <el-col :span="5" :offset="10"><el-button class="width2 main-button" type="primary" plain @click="submitForm('form')">提交</el-button></el-col>
             </el-row>
+        </el-card>
     </div>
     <div v-else>
         <el-result icon="error" title="permission denied" subTitle="您没有权限访问此页面">

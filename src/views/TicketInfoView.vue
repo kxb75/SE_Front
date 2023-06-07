@@ -1,7 +1,9 @@
 <template>
-    <div class="ticketInfo">
+    <div class="ticketInfo back1">
+        <el-row class="margin1"></el-row>
+        <el-card class="card-back">
         <el-row>
-            <el-col :span="2" :offset="11">
+            <el-col :span="4" :offset="10">
             <p class="title">历史订单</p>
             </el-col>
         </el-row>
@@ -137,6 +139,7 @@
                 </el-table>
             </el-collapse-item>
         </el-collapse>
+    </el-card>
     </div>
 </template>
 

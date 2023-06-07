@@ -2,6 +2,7 @@
   <div id="app" style="position: relative; height: 100%;">
         <el-menu 
         router
+        background-color="#efefff"
         :default-active="this.$route.path"
         class="el-menu" 
         mode="horizontal" 

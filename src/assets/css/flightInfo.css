@@ -1,11 +1,10 @@
-.title {
-    font-size:25px;
-    font-weight: bolder;
-    text-align: center;
-}
-
 .el-row {
     margin-top :20px;
+}
+
+.el-row.margin1 {
+    margin: 0;
+    height:60px;
 }
 
 ::v-deep .el-table .el-table__cell {
@@ -13,6 +12,7 @@
 } 
 
 .el-card {
+    opacity: 90%;
     position: relative;
     width: 60%;
     left: 20%;
