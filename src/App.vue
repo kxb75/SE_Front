@@ -161,13 +161,13 @@ export default {
   height: 40px !important;
   width: 100%;
   align-items: center;
-  background-color: rgba(240, 248, 255, 0);
+  background-color: rgba(240, 248, 255, 0) !important;
 }
 
 .app-foot {
   color: rgba(128, 128, 128, 0.681);
   text-align: center;
   font-size: small;
-  background-color: rgba(240, 248, 255, 0);
+  background-color: rgba(240, 248, 255, 0) !important;
 }
 </style>

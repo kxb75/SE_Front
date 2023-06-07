@@ -9,6 +9,10 @@
     left:5%;
 }
 
+.el-row {
+    width: 100%
+}
+
 .margin1
 {
     height:50px;
@@ -19,4 +23,13 @@
     width:90%;
     min-height: 600px;
     left:5%;
+}
+
+::v-deep .el-collapse-item__header {
+    background-color: rgba(240, 248, 255, 0) !important;
+    border-color: rgba(240, 248, 255, 0) !important;;
+}
+
+.el-collapse-item {
+    background-color: rgba(240, 248, 255, 0);
 }
