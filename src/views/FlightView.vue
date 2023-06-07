@@ -183,6 +183,10 @@ const axios = require('axios');
             if(this.$store.state.cities.length == 0)this.getCity();
             this.form = this.$store.state.searchCondition;
             this.tableData = this.$store.state.searchResult;
+            if(this.$store.state.submitFlag == 1) {
+                this.submitForm('form');
+                this.$store.commit('changeFlag', 0);
+            }
         },
         methods : {
             toAddFlight() {

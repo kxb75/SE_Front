@@ -237,8 +237,8 @@ export default {
         }
     },
     methods: {
-        toHome() {
-            this.$router.push({path:'/'});
+        toLogin() {
+            this.$router.push({path:'/login'});
         },
         submitForm(formName) {
             this.$refs[formName].validate(valid => {
@@ -249,13 +249,13 @@ export default {
                         email: this.$data.ruleForm.email,
                         user_nickname:this.$data.ruleForm.name,
                     };
-                    var toHome = this.toHome;
+                    var toLogin = this.toLogin;
                     var data = this.$data;
                     axios.post('http://127.0.0.1:8000/register/', postUser
                     ).then(function (response) {
                         data.dialogVisible1 = true;
                         console.log(response);
-                        toHome();
+                        toLogin();
                     }).catch(function (error) {
                         console.log(error);
                         if(typeof(error.response) == 'undefined') {

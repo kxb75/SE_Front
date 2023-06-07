@@ -17,7 +17,7 @@
                     <el-form-item label="手机号" prop="phoneNumber">
                         <el-input placeholder="请输入手机号" v-model="form.phoneNumber" clearable></el-input>
                         <div class="login-link">
-                            <router-link class="login-form-link" to="/register">去注册</router-link>
+                            <router-link v-show="currentIndex == 1" class="login-form-link" to="/register">去注册</router-link>
                         </div>
                     </el-form-item>
                     <el-form-item label="密码" prop="password">

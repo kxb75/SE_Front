@@ -25,6 +25,7 @@ export default new Vuex.Store({
     currentFlight: {},
     airports: [],
     cities: [],
+    submitFlag: 0,
     optionsInsurance: [{
       value: 0,
       label: '此航班不提供保险',
@@ -54,6 +55,9 @@ export default new Vuex.Store({
     },
     changeUser(state, user) {
       state.currentUser = user;
+    },
+    changeFlag(state, newFlag) {
+      state.submitFlag = newFlag;
     },
     updateCurrentFlight(state, flight) {
       state.currentFlight = flight;
