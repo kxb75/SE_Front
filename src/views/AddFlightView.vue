@@ -256,7 +256,8 @@ const axios = require('axios');
             submitUpload() {
                 this.$refs.upload.submit();
             },
-            uploadFileError() {
+            uploadFileError(response) { 
+                if(response.status == 504)return;
                 this.error('上传失败');
             },
             uploadFileSuccess() {

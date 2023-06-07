@@ -95,7 +95,7 @@
             <el-table-column
             label="头等舱"
             width="80">
-            <template slot-scope="scope">{{scope.row.price/10*15}}￥</template>
+            <template slot-scope="scope">{{ Math.round(scope.row.price/10*15)}}￥</template>
             </el-table-column>
             <el-table-column
             prop="first_class_seats_available"
@@ -105,7 +105,7 @@
             <el-table-column
             label="商务舱"
             width="80">
-            <template slot-scope="scope">{{scope.row.price/10*13}}￥</template>
+            <template slot-scope="scope">{{Math.round(scope.row.price/10*13)}}￥</template>
             </el-table-column>
             <el-table-column
             prop="business_seats_available"
@@ -115,7 +115,7 @@
             <el-table-column
             label="经济舱"
             width="80">
-            <template slot-scope="scope">{{scope.row.price/10*10}}￥</template>
+            <template slot-scope="scope">{{ Math.round(scope.row.price/10*10)}}￥</template>
             </el-table-column>
             <el-table-column
             prop="economy_seats_available"
@@ -150,67 +150,7 @@ const axios = require('axios');
             }
             return {
                 form: {},
-                tableData: [ {
-                    id : '',
-                    arrival_airport: '北京大兴',
-                    departure_airport: '上海浦东',
-                    flight_number: 'M1234',
-                    departure_time :'2023-05-21 19:30',
-                    price : 1500,
-                    business_seats_available :15,
-                    economy_seats_available : 240,
-                    first_class_seats_available : 30,
-                    insurance : 2,
-                    status : 1,
-                }, {
-                    id : '',
-                    arrival_airport: '北京大兴',
-                    departure_airport: '上海浦东',
-                    flight_number: 'M1234',
-                    departure_time :'2023-05-21 19:30',
-                    price : 1500,
-                    business_seats_available :15,
-                    economy_seats_available : 240,
-                    first_class_seats_available : 30,
-                    insurance : 2,
-                    status : 1,
-                }, {
-                    id : '',
-                    arrival_airport: '北京大兴',
-                    departure_airport: '上海浦东',
-                    flight_number: 'M1234',
-                    departure_time :'2023-05-21 19:30',
-                    price : 1500,
-                    business_seats_available :15,
-                    economy_seats_available : 240,
-                    first_class_seats_available : 30,
-                    insurance : 2,
-                    status : 1,
-                }, {
-                    id : '',
-                    arrival_airport: '北京大兴',
-                    departure_airport: '上海浦东',
-                    flight_number: 'M1234',
-                    departure_time :'2023-05-21 19:30',
-                    price : 1500,
-                    business_seats_available :15,
-                    economy_seats_available : 240,
-                    first_class_seats_available : 30,
-                    insurance : 2,
-                    status : 1,
-                }, {
-                    id : '',
-                    arrival_airport: '北京大兴',
-                    departure_airport: '上海浦东',
-                    flight_number: 'M1234',
-                    departure_time :'2023-05-21 19:30',
-                    price : 1500,
-                    business_seats_available :15,
-                    economy_seats_available : 240,
-                    first_class_seats_available : 30,
-                    insurance : 2,
-                    status : 1,
-                }],
+                tableData: [],
                 // {
                 //     id : '',
                 //     arrival_airport: '北京大兴',
@@ -348,9 +288,9 @@ const axios = require('axios');
             handleMessage (row) {
                 var currentFlight = {
                     id : row.id,
-                    price1 : row.price/10*15,
-                    price2 : row.price/10*13,
-                    price3 : row.price/10*10,
+                    price1 : Math.round(row.price/10*15),
+                    price2 : Math.round(row.price/10*13),
+                    price3 : Math.round(row.price/10*10),
                     ticket1 : row.first_class_seats_available,
                     ticket2 : row.business_seats_available,
                     ticket3 : row.economy_seats_available,
