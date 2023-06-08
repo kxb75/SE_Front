@@ -55,6 +55,7 @@
                                     value-format="yyyy-MM-dd hh:mm"
                                     type="datetime"
                                     :clearable="false"
+                                    :picker-options="pickerOptions"
                                     placeholder="选择日期时间">
                                     </el-date-picker>
                                     </div>
@@ -110,6 +111,9 @@
                     prop="seat"
                     label="座位号"
                     width="120">
+                    <template slot-scope="scope">
+                        {{Math.floor(scope.row.seat/6 + 1) + String.fromCharCode((scope.row.seat-1)%6 + 65)}}
+                    </template>
                     </el-table-column>
                     <el-table-column
                     label="餐食预定"
@@ -169,22 +173,28 @@ const axios = require('axios');
                 },
                 temp : '',
                 tableData : [{status : ''}],
-                passengerList : [{
-                        ticketid : '',
-                        name : '张三',
-                        id : '100020003000400050',
-                        seat : '12C',
-                        statu : 1,
-                        food : false,
-                    },{
-                        ticketid : '',
-                        name : '李四',
-                        id : '100020003000400051',
-                        seat : '12A',
-                        statu : 2,
-                        food : false,
-                    }],
+                passengerList : [],
+                // {
+                //         ticketid : '',
+                //         name : '张三',
+                //         id : '100020003000400050',
+                //         seat : 12,
+                //         statu : 1,
+                //         food : false,
+                //     },{
+                //         ticketid : '',
+                //         name : '李四',
+                //         id : '100020003000400051',
+                //         seat : 32,
+                //         statu : 2,
+                //         food : false,
+                //     }
                 changing : false,
+                pickerOptions: {
+                    disabledDate : (time) => {
+                        return time.getTime() < Date.now() - 24*60*60*1000;
+                    },
+                },
             }
         },
         methods : {

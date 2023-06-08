@@ -150,7 +150,19 @@ const axios = require('axios');
             }
             return {
                 form: {},
-                tableData: [],
+                tableData: [ {
+                    id : '',
+                    arrival_airport: '北京大兴',
+                    departure_airport: '上海浦东',
+                    flight_number: 'M1234',
+                    departure_time :'2023-05-21 19:30',
+                    price : 1500,
+                    business_seats_available :15,
+                    economy_seats_available : 240,
+                    first_class_seats_available : 30,
+                    insurance : 2,
+                    status : 1,
+                }],
                 // {
                 //     id : '',
                 //     arrival_airport: '北京大兴',
@@ -165,7 +177,8 @@ const axios = require('axios');
                 //     status : 1,
                 // }
                 pickerOptions: {
-                    disabledDate(time) {
+                    disabledDate : (time) => {
+                        if(this.$store.state.identity == 2) return false;
                         return time.getTime() < Date.now() - 24*60*60*1000;
                     },
                 },
@@ -185,9 +198,9 @@ const axios = require('axios');
             }
         },
         mounted() {
-            if(this.$store.state.cities.length == 0)this.getCity();
-            this.form = this.$store.state.searchCondition;
-            this.tableData = this.$store.state.searchResult;
+            // if(this.$store.state.cities.length == 0)this.getCity();
+            // this.form = this.$store.state.searchCondition;
+            // this.tableData = this.$store.state.searchResult;
             this.$nextTick(()=>{
                 if(this.$store.state.submitFlag == 1) {
                 this.submitForm('form');

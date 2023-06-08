@@ -232,6 +232,7 @@ const axios = require('axios');
             axios.get('/api/order/',this.config
             ).then((response) => {
                     this.orderList = response.data;
+                    this.$store.state.currentUser.travelNumber = this.orderList.length;
                     console.log(response)
                 }).catch((error) => {
                     this.error('获取历史订单失败')

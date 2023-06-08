@@ -98,6 +98,21 @@
 const axios = require('axios');
     export default {
         data() {
+            var checkId = (rule, value, callback) => {
+                setTimeout(() => {
+                    if (value.length != 18) {
+                        return callback(new Error('身份证号应为18位'));
+                    }
+                    var numbers = value.split('');
+                    for (var i = 0; i < numbers.length; i++) {
+                        if (numbers[i] < '0' || numbers[i] > '9') {
+                            if(i == 17 && numbers[i] == 'X')return callback();
+                            return callback(new Error('身份证号应为数字或X'));
+                        }
+                    }
+                    callback();
+                }, 500);
+            };
             return {
                 config : {
                     headers :{
@@ -119,6 +134,7 @@ const axios = require('axios');
                     ],
                     id: [
                         { required: true, message: '请输入身份证号', trigger: 'change' },
+                        { validator: checkId, trigger: 'change' }
                     ],
                 }   
             }

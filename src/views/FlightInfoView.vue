@@ -58,8 +58,10 @@
                 width="120">
                 </el-table-column>
             </el-table>
-        <el-button v-if="this.$store.state.identity == 1" class="main-button" type="primary" plain @click="toOrder">去订票</el-button>
-        <el-button v-if="this.$store.state.identity == 2" class="main-button" type="info" plain @click="toManager">管理航班</el-button>
+            <div v-if="this.form.status != 3">
+            <el-button v-if="this.$store.state.identity == 1" class="main-button" type="primary" plain @click="toOrder">去订票</el-button>
+            <el-button v-if="this.$store.state.identity == 2" class="main-button" type="info" plain @click="toManager">管理航班</el-button>
+            </div>
     </el-card>
     </div>
 </template>

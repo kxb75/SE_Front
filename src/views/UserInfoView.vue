@@ -40,7 +40,7 @@
                                 </el-form>
                             </span>
                         </el-col>
-                        <el-col :span="3" class="userInfo-key"><span>出行次数</span></el-col>
+                        <el-col :span="3" class="userInfo-key"><span>订单数</span></el-col>
                         <el-col :span="1" class="dot"><span>:</span></el-col>
                         <el-col :span="6" class="userInfo-value">
                             <span class="value">{{ user.travelNumber }}</span>
